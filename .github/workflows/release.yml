@@ -1,0 +1,49 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      version: ${{ steps.release.outputs.version }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Run Release Please
+        id: release
+        uses: google-github-actions/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Checkout Code
+        if: ${{ steps.release.outputs.releases_created }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Automated Sync-Back to develop
+        if: ${{ steps.release.outputs.releases_created }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Fetch all branches
+          git fetch origin develop
+          
+          # Switch to develop
+          git checkout develop
+          
+          # Merge main's tag back into develop to keep changelog/version in sync
+          git merge --no-ff -m "chore: merge release v${{ steps.release.outputs.version }} back into develop [skip ci]" origin/main
+          
+          # Push changes back to origin
+          git push origin develop
