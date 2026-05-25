@@ -1,0 +1,60 @@
+# Agent Collaboration & Git Guidelines
+
+Welcome to the **Bluesky Meta-Discourse Labeler** project. This repository enforces strict guidelines for AI agents and human collaborators to ensure clean development history, code isolation, and synchronization.
+
+---
+
+## 1. Branching Model: Git-Flow
+
+We adhere strictly to the **git-flow** branching model for all project modifications. Do not commit directly to primary branches.
+
+### Primary Branches
+* **`main`:** Production-ready code. Matches the latest stable release.
+* **`develop`:** Integration branch for the latest development changes. Features are merged here to prepare for release.
+
+### Supporting Branches
+* **`feature/<name>`:** Used to build specific features or tasks.
+  * *Workflow:* Branch off `develop`, build the feature, test it, push changes, and open a Pull Request back into `develop`.
+* **`release/<version>`:** Prepares a release from `develop` to `main`.
+* **`hotfix/<name>`:** Emergency fixes targeting `main` directly.
+
+### Agent Workflow Commands
+Before starting a new task, always pull the latest changes from `develop` and create a dedicated feature branch:
+
+```bash
+# Ensure you are on develop and fully updated
+git checkout develop
+git pull origin develop
+
+# Create your dedicated feature branch
+git checkout -b feature/your-feature-name
+```
+
+---
+
+## 2. Synchronization Requirement: Push All Changes
+
+All AI agents and collaborators **must push their commits** to the remote origin. This guarantees that your changes are backed up, visible to peers, and integrated into CI/CD pipelines.
+
+When committing your work:
+1. Write clear, structured commit messages adhering to standard conventions (e.g. Conventional Commits: `feat: add ...`, `fix: resolve ...`).
+2. Run your verification tests locally first.
+3. Push your branch to the remote repository:
+
+```bash
+# Stage and commit your changes
+git add .
+git commit -m "feat: implement feature xyz"
+
+# Push to the remote origin
+git push -u origin feature/your-feature-name
+```
+
+---
+
+## 3. Pull Requests & Code Review
+
+Once a task is complete and thoroughly tested:
+1. Ensure your branch is fully pushed.
+2. Open a Pull Request targeting `develop`.
+3. Provide a clear walkthrough of the changes, verification outputs, and execution logs inside the PR description.
