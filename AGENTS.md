@@ -10,6 +10,8 @@ Welcome to the **Bluesky Meta-Discourse Labeler** project. This repository enfor
 - `internal/` — Core implementation packages (config, pipeline, services)
 - `docs/` — Documentation (see [ARCHITECTURE.md](docs/ARCHITECTURE.md))
 - `scripts/` — Helper scripts (including [verify-harness.sh](scripts/verify-harness.sh))
+- `.github/workflows/` — CI/CD workflows, including the multi-arch builder [build-image.yml](.github/workflows/build-image.yml) and [harness-verify.yml](.github/workflows/harness-verify.yml)
+
 
 ---
 
