@@ -113,4 +113,47 @@ sequenceDiagram
   - `classifier.go`: Encodes posts into custom XML schemas and executes inference against `llama.cpp`.
   - `ozone.go`: Signs and broadcasts cryptographic labels.
 
+## Development & Contribution
+
+### Prerequisites
+- Go 1.21+
+- Docker & Docker Compose
+
+### Tooling & Make Commands
+
+We package development utilities inside the `Makefile`:
+
+```bash
+# Build the labeler binary
+make build
+
+# Run all unit tests
+make test
+
+# Run the daemon locally
+make run
+
+# Verify agent-readiness and harness rules
+make verify-harness
+```
+
+### Collaboration Guidelines (Git-Flow)
+We adhere strictly to the **Git-Flow** branching model. Do not commit directly to primary branches.
+1. Always synchronize your branch from the upstream `develop` branch.
+2. Create a dedicated feature branch:
+   ```bash
+   git checkout develop
+   git pull origin develop
+   git checkout -b feature/your-feature-name
+   ```
+3. Commit with structured Conventional Commit format (e.g. `feat: ...`, `fix: ...`).
+4. Ensure your branch passes the automated harness validation before opening a PR:
+   ```bash
+   make verify-harness
+   ```
+5. Target all Pull Requests to the `develop` integration branch.
+
+For comprehensive agent compliance and repository structural rules, see [AGENTS.md](AGENTS.md).
+
+
 
