@@ -7,7 +7,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/npmanos/discourse-labeler/internal/pipeline"
+	types "github.com/npmanos/discourse-labeler/internal/pipeline"
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
 )

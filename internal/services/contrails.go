@@ -7,7 +7,7 @@ import (
 	"net/url"
 
 	"github.com/gorilla/websocket"
-	"github.com/npmanos/discourse-labeler/internal/pipeline"
+	types "github.com/npmanos/discourse-labeler/internal/pipeline"
 )
 
 type ContrailsIngester struct {

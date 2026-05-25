@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/npmanos/discourse-labeler/internal/pipeline"
+	types "github.com/npmanos/discourse-labeler/internal/pipeline"
 )
 
 func TestLLMClassifierMetaDiscourseTrue(t *testing.T) {

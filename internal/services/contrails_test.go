@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/npmanos/discourse-labeler/internal/pipeline"
+	types "github.com/npmanos/discourse-labeler/internal/pipeline"
 )
 
 var upgrader = websocket.Upgrader{}
