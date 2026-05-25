@@ -22,6 +22,7 @@ type Config struct {
 	LabelerDID            string
 	OzoneAdminToken       string
 	DryRun                bool
+	LLMSystemPrompt       string
 }
 
 func Load() (*Config, error) {
@@ -42,6 +43,7 @@ func Load() (*Config, error) {
 		LabelerDID:            getEnv("LABELER_DID", ""),
 		OzoneAdminToken:       getEnv("OZONE_ADMIN_TOKEN", ""),
 		DryRun:                getEnvBool("DRY_RUN", false),
+		LLMSystemPrompt:       loadSystemPrompt(getEnv("LLM_SYSTEM_PROMPT", ""), getEnv("LLM_SYSTEM_PROMPT_PATH", "")),
 	}, nil
 }
 
@@ -86,4 +88,17 @@ func getEnvBool(key string, fallback bool) bool {
 		return fallback
 	}
 	return val
+}
+
+func loadSystemPrompt(promptEnv, promptPathEnv string) string {
+	if promptEnv != "" {
+		return promptEnv
+	}
+	if promptPathEnv != "" {
+		content, err := os.ReadFile(promptPathEnv)
+		if err == nil {
+			return string(content)
+		}
+	}
+	return ""
 }

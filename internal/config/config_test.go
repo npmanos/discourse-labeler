@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"testing"
 )
 
@@ -54,5 +55,44 @@ func TestConfigLoadInvalidTypesFallback(t *testing.T) {
 	}
 	if cfg.DryRun != false {
 		t.Errorf("expected fallback DryRun false, got %t", cfg.DryRun)
+	}
+}
+
+func TestConfigLoadSystemPromptOverride(t *testing.T) {
+	// Scenario 1: Direct string override
+	t.Setenv("LLM_SYSTEM_PROMPT", "direct-prompt-override")
+	t.Setenv("LLM_SYSTEM_PROMPT_PATH", "")
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("failed to load config: %v", err)
+	}
+	if cfg.LLMSystemPrompt != "direct-prompt-override" {
+		t.Errorf("expected LLMSystemPrompt 'direct-prompt-override', got %q", cfg.LLMSystemPrompt)
+	}
+
+	// Scenario 2: File path override
+	t.Setenv("LLM_SYSTEM_PROMPT", "")
+	tmpFile := t.TempDir() + "/prompt.txt"
+	expectedPrompt := "file-prompt-override"
+	if err := os.WriteFile(tmpFile, []byte(expectedPrompt), 0644); err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	t.Setenv("LLM_SYSTEM_PROMPT_PATH", tmpFile)
+	cfg, err = Load()
+	if err != nil {
+		t.Fatalf("failed to load config: %v", err)
+	}
+	if cfg.LLMSystemPrompt != expectedPrompt {
+		t.Errorf("expected LLMSystemPrompt %q, got %q", expectedPrompt, cfg.LLMSystemPrompt)
+	}
+
+	// Scenario 3: Both set (direct string takes precedence)
+	t.Setenv("LLM_SYSTEM_PROMPT", "direct-precedence")
+	cfg, err = Load()
+	if err != nil {
+		t.Fatalf("failed to load config: %v", err)
+	}
+	if cfg.LLMSystemPrompt != "direct-precedence" {
+		t.Errorf("expected LLMSystemPrompt 'direct-precedence', got %q", cfg.LLMSystemPrompt)
 	}
 }
