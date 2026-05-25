@@ -4,21 +4,47 @@ Welcome to the **Bluesky Meta-Discourse Labeler** project. This repository enfor
 
 ---
 
-## 1. Branching Model: Git-Flow
+## Repo Structure
+
+- `cmd/` — Application entrypoints (e.g., [cmd/labeler/main.go](cmd/labeler/main.go))
+- `internal/` — Core implementation packages (config, pipeline, services)
+- `docs/` — Documentation (see [ARCHITECTURE.md](docs/ARCHITECTURE.md))
+- `scripts/` — Helper scripts (including [verify-harness.sh](scripts/verify-harness.sh))
+
+---
+
+## Commands
+
+```bash
+# Build the labeler daemon
+go build -o bin/labeler ./cmd/labeler
+
+# Run the test suite
+go test -v ./...
+
+# Verify agent harness consistency
+make verify-harness
+```
+
+---
+
+## Rules
+
+### 1. Branching Model: Git-Flow
 
 We adhere strictly to the **git-flow** branching model for all project modifications. Do not commit directly to primary branches.
 
-### Primary Branches
+#### Primary Branches
 * **`main`:** Production-ready code. Matches the latest stable release.
 * **`develop`:** Integration branch for the latest development changes. Features are merged here to prepare for release.
 
-### Supporting Branches
+#### Supporting Branches
 * **`feature/<name>`:** Used to build specific features or tasks.
   * *Workflow:* Branch off `develop`, build the feature, test it, push changes, and open a Pull Request back into `develop`.
 * **`release/<version>`:** Prepares a release from `develop` to `main`.
 * **`hotfix/<name>`:** Emergency fixes targeting `main` directly.
 
-### Agent Workflow Commands
+#### Agent Workflow Commands
 Before starting a new task, always pull the latest changes from `develop` and create a dedicated feature branch:
 
 ```bash
@@ -30,9 +56,7 @@ git pull origin develop
 git checkout -b feature/your-feature-name
 ```
 
----
-
-## 2. Synchronization Requirement: Push All Changes
+### 2. Synchronization Requirement: Push All Changes
 
 All AI agents and collaborators **must push their commits** to the remote origin. This guarantees that your changes are backed up, visible to peers, and integrated into CI/CD pipelines.
 
@@ -50,11 +74,17 @@ git commit -m "feat: implement feature xyz"
 git push -u origin feature/your-feature-name
 ```
 
----
-
-## 3. Pull Requests & Code Review
+### 3. Pull Requests & Code Review
 
 Once a task is complete and thoroughly tested:
 1. Ensure your branch is fully pushed.
 2. Open a Pull Request targeting `develop`.
 3. Provide a clear walkthrough of the changes, verification outputs, and execution logs inside the PR description.
+
+---
+
+## References
+
+- [Architecture Plan](docs/ARCHITECTURE.md)
+- [Design Specs](docs/superpowers/specs/)
+- [Implementation Plans](docs/superpowers/plans/)
