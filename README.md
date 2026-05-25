@@ -44,3 +44,29 @@ Start the background classification pipeline:
 ```bash
 make run
 ```
+
+## Configuration Reference
+
+The daemon is configured entirely through environment variables or a `.env` file at the root.
+
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `8081` | Port to run the status/health server on. |
+| `LOG_LEVEL` | `info` | Logging verbosity (`debug`, `info`, `warn`, `error`). |
+| `CURSOR_FILE_PATH` | `./data/cursor.json` | Path to store the firehose replication cursor state. |
+| `CURSOR_REWIND_SECONDS`| `10` | Number of seconds to rewind firehose state upon reconnection. |
+| `HYDRATION_WORKERS` | `10` | Concurrent worker count for fetching parent/quoted post context. |
+| `CLASSIFICATION_WORKERS`| `4` | Concurrent worker count for running local LLM inference. |
+| `GRAZE_FEED_URI` | *Required* | The AT-URI of the Bluesky feed to ingest events from. |
+| `CONTRAILS_WS_URL` | `wss://api.graze.social/app/contrail` | Graze Contrails event WebSocket endpoint. |
+| `SLINGSHOT_URL` | `https://slingshot.microcosm.blue` | Microcosm Slingshot edge cache RPC endpoint. |
+| `LLM_ENDPOINT` | `http://localhost:8080/v1/` | Base URL of OpenAI-compatible inference server. |
+| `LLM_MODEL` | `google/gemma-4-e2b-gguf` | LLM model identifier. |
+| `LLM_TEMPERATURE` | `0.0` | Sampling temperature for classification (keep at `0.0` for determinism). |
+| `OZONE_ENDPOINT` | `http://localhost:3000` | Target Ozone moderation server API endpoint. |
+| `LABELER_DID` | *Required* | Cryptographic DID of the network labeler service. |
+| `OZONE_ADMIN_TOKEN` | *Required* | Authentication token for Ozone server write-access. |
+| `DRY_RUN` | `false` | If `true`, classifications are computed but labels are not sent to Ozone. |
+| `LLM_SYSTEM_PROMPT` | *(Empty)* | Raw system prompt override string. |
+| `LLM_SYSTEM_PROMPT_PATH`| *(Empty)* | File path to load custom system prompt from. |
+
