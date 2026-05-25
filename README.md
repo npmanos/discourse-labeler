@@ -21,29 +21,37 @@ Posts evaluating, criticizing, or theorizing about the cultural and social exper
 
 ## Quick Start
 
-Get the stack up and running locally in three steps:
+Get the entire stack up and running locally:
 
-### 1. Launch the Inference Server
-Ensure you have Docker and Docker Compose installed. Run the local `llama.cpp` container serving `gemma-4-e2b`:
-```bash
-docker compose up -d
-```
+### 1. Set Up Ozone
+You will need a running Ozone instance to receive moderation labels. If you don't have one set up, follow the official [Ozone Hosting Guide](https://github.com/bluesky-social/ozone/blob/main/HOSTING.md) first.
 
 ### 2. Configure Environment Variables
-Copy the example environment file and fill in required keys:
+Copy the example environment file and fill in your keys:
 ```bash
 cp .env.example .env
 ```
 At a minimum, configure the following variables in `.env`:
-- `GRAZE_FEED_URI` (AT-URI of the feed to listen to)
+- `GRAZE_FEED_URI` (The AT-URI of the feed to listen to)
 - `LABELER_DID` (Your cryptographic labeler DID)
-- `OZONE_ADMIN_TOKEN` (Your Ozone auth token)
+- `OZONE_ENDPOINT` (URL of your Ozone server)
+- `OZONE_ADMIN_TOKEN` (Your Ozone admin/auth token)
 
-### 3. Run the Daemon
-Start the background classification pipeline:
+### 3. Run the Stack
+Both the Go daemon and the local `llama.cpp` inference server are containerized. Build and launch the entire stack using Docker Compose:
 ```bash
-make run
+docker compose up --build -d
 ```
+
+> 💡 **Tip for Developers:** If you are modifying the Go daemon locally and want hot-reloading/direct logs, run only the model inference server in Docker and run the Go daemon natively:
+> ```bash
+> # Start only the local LLM
+> docker compose up -d llama-server
+> 
+> # Run the Go daemon locally
+> make run
+> ```
+
 
 ## Configuration Reference
 
