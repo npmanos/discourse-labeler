@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # 1. The Go Classification Daemon
+  labeler-daemon:
+    container_name: labeler_daemon
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - llama-server
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+
+  # 2. Local LLM Classification Engine (llama.cpp)
+  llama-server:
+    container_name: discourse_llm
+    # --- CPU VERSION (Default) ---
+    image: ghcr.io/ggml-org/llama.cpp:server
+    # --- GPU VERSION (Optional: Uncomment to use Nvidia GPU) ---
+    # image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./models:/models
+    command: >
+      -m /models/gemma-4-e2b.gguf
+      --host 0.0.0.0
+      --port 8080
+      -c 8192
+      --hf-repo "google/gemma-4-e2b-gguf"
+      --hf-file "gemma-4-e2b.Q4_K_M.gguf"
+    # --n-gpu-layers 99  # (Optional: Uncomment for GPU acceleration)
