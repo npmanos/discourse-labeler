@@ -109,4 +109,3 @@ func TestConfigLoadSystemPromptOverrideError(t *testing.T) {
 		t.Errorf("expected nil config on error, got %+v", cfg)
 	}
 }
-

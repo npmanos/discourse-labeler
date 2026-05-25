@@ -199,7 +199,7 @@ func TestLLMClassifierParentAndQuoted(t *testing.T) {
 		if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
 			t.Errorf("failed to decode request body: %v", err)
 		}
-		
+
 		// The last user message must contain the exact formatted XML payload
 		lastMsgIdx := len(reqBody.Messages) - 1
 		lastMessage := reqBody.Messages[lastMsgIdx]

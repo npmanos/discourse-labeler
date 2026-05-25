@@ -91,3 +91,6 @@ Once a task is complete and thoroughly tested:
 - [Architecture Plan](docs/ARCHITECTURE.md)
 - [Design Specs](docs/superpowers/specs/)
 - [Implementation Plans](docs/superpowers/plans/)
+
+<!-- Last updated: May 2026 for Go 1.24.0 compatibility and linting standards -->
+

@@ -89,11 +89,11 @@ func (c *LRUCache) ContainsOrAdd(key string) bool {
 // Coordinator orchestrates the ingestion, filtering, deduplication, hydration,
 // classification, and label emission pipeline.
 type Coordinator struct {
-	Ingester              Ingester
-	Hydrator              Hydrator
-	Classifier            Classifier
-	OzoneClient           LabelEmitter
-	OzoneQuery            interface {
+	Ingester    Ingester
+	Hydrator    Hydrator
+	Classifier  Classifier
+	OzoneClient LabelEmitter
+	OzoneQuery  interface {
 		IsAlreadyLabeled(ctx context.Context, uri string) (bool, error)
 	}
 	Cursor                *CursorTracker
