@@ -29,26 +29,53 @@ The following are strictly NOT meta-discourse:
 - Ordinary posts using platform-specific terminology (like "skeet" or "repost") in passing.
 
 # INSTRUCTIONS
-Analyze the provided user post. Output a valid JSON object containing exactly one boolean key: is_meta_discourse.`
+Analyze the provided user post. You MUST consider the target post in the context of any provided parent posts or quoted posts. A target post which replies to or quotes a post which is meta discourse is likely also meta discourse. Output a valid JSON object containing exactly one boolean key: is_meta_discourse.`
 
 type LLMClassifier struct {
-	Client *openai.Client
-	Model  string
+	Client       *openai.Client
+	Model        string
+	SystemPrompt string
 }
 
-func NewLLMClassifier(endpoint, model string) *LLMClassifier {
+type LLMClassifierOption func(*LLMClassifier)
+
+func WithSystemPrompt(prompt string) LLMClassifierOption {
+	return func(lc *LLMClassifier) {
+		lc.SystemPrompt = prompt
+	}
+}
+
+func NewLLMClassifier(endpoint, model string, opts ...LLMClassifierOption) *LLMClassifier {
 	client := openai.NewClient(
 		option.WithBaseURL(endpoint),
 		option.WithAPIKey("local-llama-nopass"),
 	)
-	return &LLMClassifier{
+	lc := &LLMClassifier{
 		Client: &client,
 		Model:  model,
 	}
+	for _, opt := range opts {
+		opt(lc)
+	}
+	return lc
 }
 
 type SchemaResponse struct {
 	IsMetaDiscourse bool `json:"is_meta_discourse"`
+}
+
+func formatPostInput(hp *types.HydratedPost) string {
+	var sb strings.Builder
+	sb.WriteString("<posts>\n")
+	if hp.HasParentContext && hp.ParentText != "" {
+		sb.WriteString(fmt.Sprintf("  <post type=\"parent_post\">\n    %s\n  </post>\n", strings.TrimSpace(hp.ParentText)))
+	}
+	sb.WriteString(fmt.Sprintf("  <post type=\"target_post\">\n    %s\n  </post>\n", strings.TrimSpace(hp.TargetText)))
+	if hp.QuotedText != "" {
+		sb.WriteString(fmt.Sprintf("  <post type=\"quoted_post\">\n    %s\n  </post>\n", strings.TrimSpace(hp.QuotedText)))
+	}
+	sb.WriteString("</posts>")
+	return sb.String()
 }
 
 func (lc *LLMClassifier) Classify(ctx context.Context, hp *types.HydratedPost) (*types.ClassificationResult, error) {
@@ -56,29 +83,57 @@ func (lc *LLMClassifier) Classify(ctx context.Context, hp *types.HydratedPost) (
 		return nil, fmt.Errorf("hydrated post cannot be nil")
 	}
 
-	targetPost := hp.TargetText
-	if hp.HasParentContext {
-		targetPost = fmt.Sprintf("Context (Parent Post): %s\n\nTarget Post: %s", hp.ParentText, hp.TargetText)
+	prompt := sysPrompt
+	if lc.SystemPrompt != "" {
+		prompt = lc.SystemPrompt
 	}
+
+	targetPost := formatPostInput(hp)
 
 	// Build prompt message array with exactly 5 few-shot examples from the spec
 	messages := []openai.ChatCompletionMessageParamUnion{
-		openai.SystemMessage(sysPrompt),
+		openai.SystemMessage(prompt),
 		// Example 1
-		openai.UserMessage("i think, end of the day, the real problem with Bluesky is that most of its users are here *because* they want to be in a bubble. it's why despite the activity on here, the site still gives people bad vibes. X, despite it all, is still a more fun place."),
+		openai.UserMessage(`<posts>
+  <post type="parent_post">
+    i think, end of the day, the real problem with Bluesky is that most of its users are here *because* they want to be in a bubble. it's why despite the activity on here, the site still gives people bad vibes. X, despite it all, is still a more fun place.
+  </post>
+  <post type="target_post">
+    it's why despite the activity on here, and more people clicking links, etc, the site still gives people bad vibes. the pile-ons are one thing, but those happen on all social media. it's that the typical mode here is one of distanced engagement, occasionally doing a 180 into angry gatekeeping.
+  </post>
+</posts>`),
 		openai.AssistantMessage(`{"is_meta_discourse": true}`),
 		// Example 2
-		openai.UserMessage("i'm not on bluesky because i want to live in a bubble. i'm on bluesky because i love reading long manifestos about what's wrong with bluesky by people who don't spend enough time here to know someone does this every 10 days."),
+		openai.UserMessage(`<posts>
+  <post type="target_post">
+    i'm not on bluesky because i want to live in a bubble. i'm on bluesky because i love reading long manifestos about what's wrong with bluesky by people who don't spend enough time here to know someone does this every 10 days.
+  </post>
+</posts>`),
 		openai.AssistantMessage(`{"is_meta_discourse": true}`),
 		// Example 3
-		openai.UserMessage("Finally got my labeler up and running! I'm streaming Jetstream into a Go backend and using a local Ollama container to classify text. The atproto documentation for cryptographically signing the labels was a bit dense but I figured it out."),
+		openai.UserMessage(`<posts>
+  <post type="target_post">
+    The Bluesky team just pushed an update for the new video player. You can now scrub through clips without the audio dropping out. Huge improvement over the beta version from last week.
+  </post>
+</posts>`),
 		openai.AssistantMessage(`{"is_meta_discourse": false}`),
 		// Example 4
-		openai.UserMessage("The Bluesky team just pushed an update for the new video player. You can now scrub through clips without the audio dropping out. Huge improvement over the beta version from last week."),
+		openai.UserMessage(`<posts>
+  <post type="target_post">
+    Every time I post about this election, my replies fill up with the worst takes imaginable. I can't believe people are actually defending this policy.
+  </post>
+</posts>`),
 		openai.AssistantMessage(`{"is_meta_discourse": false}`),
 		// Example 5
-		openai.UserMessage("Every time I post about this election, my replies fill up with the worst takes imaginable. I can't believe people are actually defending this policy."),
-		openai.AssistantMessage(`{"is_meta_discourse": false}`),
+		openai.UserMessage(`<posts>
+  <post type="target_post">
+    The problem is that too many of you have lost faith in liberalism and the power of free speech and talking to the other side. Aaron Sorkin taught us that if you post hard enough you can actually force Elon Musk to change the way Twitter works.
+  </post>
+  <post type="quoted_post">
+    i think, end of the day, the real problem with Bluesky is that most of its users are here because they want to be in a bubble. and they can tell themselves that it’s just about not being around Nazis it supporting Musk, and that’s part of it, but also there’s a palpable desire to be ensconced.
+  </post>
+</posts>`),
+		openai.AssistantMessage(`{"is_meta_discourse": true}`),
 		// Target Post
 		openai.UserMessage(targetPost),
 	}
@@ -150,3 +205,4 @@ func (lc *LLMClassifier) Classify(ctx context.Context, hp *types.HydratedPost) (
 
 	return result, nil
 }
+

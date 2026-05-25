@@ -135,3 +135,51 @@ func TestLLMClassifierNilPostError(t *testing.T) {
 		t.Fatal("expected error when classifying a nil hydrated post, but got none")
 	}
 }
+
+func TestLLMClassifierWithSystemPromptOverride(t *testing.T) {
+	expectedOverride := "custom-system-prompt-here"
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var reqBody struct {
+			Messages []struct {
+				Role    string `json:"role"`
+				Content string `json:"content"`
+			} `json:"messages"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+			t.Errorf("failed to decode request body: %v", err)
+		}
+		if len(reqBody.Messages) == 0 {
+			t.Fatal("expected messages, got none")
+		}
+		if reqBody.Messages[0].Role != "system" {
+			t.Errorf("expected first message to be system, got %s", reqBody.Messages[0].Role)
+		}
+		if reqBody.Messages[0].Content != expectedOverride {
+			t.Errorf("expected system prompt %q, got %q", expectedOverride, reqBody.Messages[0].Content)
+		}
+
+		response := map[string]interface{}{
+			"choices": []map[string]interface{}{
+				{
+					"message": map[string]string{
+						"content": `{"is_meta_discourse": false}`,
+					},
+				},
+			},
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	classifier := NewLLMClassifier(server.URL+"/v1/", "test-model", WithSystemPrompt(expectedOverride))
+	hp := &types.HydratedPost{
+		TargetText: "test post content",
+	}
+
+	_, err := classifier.Classify(context.Background(), hp)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
