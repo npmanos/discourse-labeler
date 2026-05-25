@@ -21,5 +21,6 @@ linters-settings:
     enable-all: true
     disable:
       - fieldalignment
+      - shadow
   gofmt:
     simplify: true

@@ -8,7 +8,7 @@ import (
 	"syscall"
 
 	"github.com/npmanos/discourse-labeler/internal/config"
-	"github.com/npmanos/discourse-labeler/internal/pipeline" // Resolves to 'types' package
+	types "github.com/npmanos/discourse-labeler/internal/pipeline" // Resolves to 'types' package
 	"github.com/npmanos/discourse-labeler/internal/services"
 )
 

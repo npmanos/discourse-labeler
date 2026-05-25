@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/npmanos/discourse-labeler/internal/pipeline"
+	types "github.com/npmanos/discourse-labeler/internal/pipeline"
 )
 
 type OzoneClient struct {
