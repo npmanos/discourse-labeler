@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -183,3 +184,62 @@ func TestLLMClassifierWithSystemPromptOverride(t *testing.T) {
 	}
 }
 
+func TestLLMClassifierParentAndQuoted(t *testing.T) {
+	expectedParent := "this is a parent message discussing bluesky vibes"
+	expectedTarget := "replying to the parent with standard target text"
+	expectedQuote := "quoting some other discourse here"
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var reqBody struct {
+			Messages []struct {
+				Role    string `json:"role"`
+				Content string `json:"content"`
+			} `json:"messages"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+			t.Errorf("failed to decode request body: %v", err)
+		}
+		
+		// The last user message must contain the exact formatted XML payload
+		lastMsgIdx := len(reqBody.Messages) - 1
+		lastMessage := reqBody.Messages[lastMsgIdx]
+		if lastMessage.Role != "user" {
+			t.Errorf("expected last message to be user, got %s", lastMessage.Role)
+		}
+
+		expectedXML := fmt.Sprintf("<posts>\n  <post type=\"parent_post\">\n    %s\n  </post>\n  <post type=\"target_post\">\n    %s\n  </post>\n  <post type=\"quoted_post\">\n    %s\n  </post>\n</posts>", expectedParent, expectedTarget, expectedQuote)
+		if lastMessage.Content != expectedXML {
+			t.Errorf("expected XML target payload:\n%s\n\nGot:\n%s", expectedXML, lastMessage.Content)
+		}
+
+		response := map[string]interface{}{
+			"choices": []map[string]interface{}{
+				{
+					"message": map[string]string{
+						"content": `{"is_meta_discourse": true}`,
+					},
+				},
+			},
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	classifier := NewLLMClassifier(server.URL+"/v1/", "test-model")
+	hp := &types.HydratedPost{
+		ParentText:       expectedParent,
+		TargetText:       expectedTarget,
+		QuotedText:       expectedQuote,
+		HasParentContext: true,
+	}
+
+	res, err := classifier.Classify(context.Background(), hp)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if !res.IsMetaDiscourse {
+		t.Errorf("expected classification to be true")
+	}
+}
