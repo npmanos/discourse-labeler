@@ -96,3 +96,17 @@ func TestConfigLoadSystemPromptOverride(t *testing.T) {
 		t.Errorf("expected LLMSystemPrompt 'direct-precedence', got %q", cfg.LLMSystemPrompt)
 	}
 }
+
+func TestConfigLoadSystemPromptOverrideError(t *testing.T) {
+	t.Setenv("LLM_SYSTEM_PROMPT", "")
+	t.Setenv("LLM_SYSTEM_PROMPT_PATH", "/non/existent/path/to/prompt.txt")
+
+	cfg, err := Load()
+	if err == nil {
+		t.Fatal("expected error when loading from non-existent prompt path, got nil")
+	}
+	if cfg != nil {
+		t.Errorf("expected nil config on error, got %+v", cfg)
+	}
+}
+

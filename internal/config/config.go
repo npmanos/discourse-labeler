@@ -26,6 +26,11 @@ type Config struct {
 }
 
 func Load() (*Config, error) {
+	systemPrompt, err := loadSystemPrompt(getEnv("LLM_SYSTEM_PROMPT", ""), getEnv("LLM_SYSTEM_PROMPT_PATH", ""))
+	if err != nil {
+		return nil, err
+	}
+
 	return &Config{
 		Port:                  getEnv("PORT", "8081"),
 		LogLevel:              getEnv("LOG_LEVEL", "info"),
@@ -43,7 +48,7 @@ func Load() (*Config, error) {
 		LabelerDID:            getEnv("LABELER_DID", ""),
 		OzoneAdminToken:       getEnv("OZONE_ADMIN_TOKEN", ""),
 		DryRun:                getEnvBool("DRY_RUN", false),
-		LLMSystemPrompt:       loadSystemPrompt(getEnv("LLM_SYSTEM_PROMPT", ""), getEnv("LLM_SYSTEM_PROMPT_PATH", "")),
+		LLMSystemPrompt:       systemPrompt,
 	}, nil
 }
 
@@ -90,15 +95,16 @@ func getEnvBool(key string, fallback bool) bool {
 	return val
 }
 
-func loadSystemPrompt(promptEnv, promptPathEnv string) string {
+func loadSystemPrompt(promptEnv, promptPathEnv string) (string, error) {
 	if promptEnv != "" {
-		return promptEnv
+		return promptEnv, nil
 	}
 	if promptPathEnv != "" {
 		content, err := os.ReadFile(promptPathEnv)
-		if err == nil {
-			return string(content)
+		if err != nil {
+			return "", err
 		}
+		return string(content), nil
 	}
-	return ""
+	return "", nil
 }
