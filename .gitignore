@@ -125,3 +125,7 @@ go.work
 # Google Antigravity & Gemini CLI specific ignore patterns
 .antigravitycli/
 .gemini/
+
+# Git worktrees
+.worktrees/
+
