@@ -7,7 +7,7 @@
 - [ ] AGENTS.md updated (if commands or repo structure changed)
 - [ ] docs/ updated (if architecture or design changed)
 - [ ] New subsystems/directories documented
-- [ ] Exec plan created in `docs/exec-plans/active/` (if multi-file change)
+- [ ] Implementation plan created in `docs/superpowers/plans/` (if multi-file change)
 
 ## Retro
 
