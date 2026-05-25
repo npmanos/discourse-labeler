@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "docker-development": {
+      "source": "netresearch/docker-development-skill",
+      "sourceType": "github",
+      "skillPath": "skills/docker-development/SKILL.md",
+      "computedHash": "c8425c2e8af03b7b1c053de657abf39a2e9b83ce1a1ac58b96c3cc4b5fc445de"
+    },
+    "git-workflow": {
+      "source": "netresearch/git-workflow-skill",
+      "sourceType": "github",
+      "skillPath": "skills/git-workflow/SKILL.md",
+      "computedHash": "536daa63366da4e76693f8265415cfacda0ca2b65ecda7de05cd47959a330485"
+    },
+    "github-project": {
+      "source": "netresearch/github-project-skill",
+      "sourceType": "github",
+      "skillPath": "skills/github-project/SKILL.md",
+      "computedHash": "ad71c8dd6ce71330a6799d059557bd1d85aaf2681d33e3ba8c09304762764461"
+    },
+    "github-release": {
+      "source": "netresearch/github-release-skill",
+      "sourceType": "github",
+      "skillPath": "skills/github-release/SKILL.md",
+      "computedHash": "f0891bc760c4ac4bef2cec953478c71e4eade9a777642307a4a62e0bd34b91f4"
+    },
+    "golang-pro": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/golang-pro/SKILL.md",
+      "computedHash": "12b4cac8f65228f82cbc26f0da9232aba87ffa45ccd01afa3998fb8ec61dc288"
+    }
+  }
+}

@@ -1,0 +1,167 @@
+version: 1
+skill_id: github-release
+
+preconditions:
+  - type: file_exists
+    target: ".git"
+
+mechanical:
+  # Release workflow checks
+  - id: GR-1
+    type: file_exists
+    target: ".github/workflows/release.yml"
+    severity: error
+    desc: "Release workflow must exist"
+
+  - id: GR-2
+    type: contains
+    target: ".github/workflows/release.yml"
+    pattern: "tags:"
+    severity: error
+    desc: "Release workflow must trigger on version tags"
+
+  - id: GR-3
+    type: contains
+    target: ".github/workflows/release.yml"
+    pattern: "id-token: write"
+    severity: error
+    desc: "Release workflow must have id-token write permission for signing"
+
+  - id: GR-4
+    type: contains
+    target: ".github/workflows/release.yml"
+    pattern: "attestations: write"
+    severity: error
+    desc: "Release workflow must have attestations write permission"
+
+  - id: GR-5
+    type: contains
+    target: ".github/workflows/release.yml"
+    pattern: "workflow_dispatch"
+    severity: info
+    desc: >-
+      Release workflow may have workflow_dispatch for manual triggers (info
+      only — netresearch skill-repo release workflow is intentionally
+      tag-push-only because workflow_dispatch + auto-bump produced unsigned
+      tags. Inline workflows that build on it can opt-in safely).
+
+  # Tag integrity checks
+  - id: GR-6
+    type: command
+    pattern: "test -z \"$(git for-each-ref refs/tags/v* --format='%(objecttype) %(refname:short)' | grep -v '^tag ')\""
+    severity: error
+    desc: >-
+      All version tags must be annotated (not lightweight). The `grep -v`
+      pipeline emits any tag whose objecttype is NOT `tag` (i.e. lightweight
+      commit-tags). Wrapping in `test -z "$(...)"` makes the command exit 0
+      only when the pipeline is empty — i.e. all tags are annotated, or no
+      tags exist at all.
+
+  # Version sync checks
+  - id: GR-7
+    type: command
+    pattern: "vendor/bin/validate-pre-release.sh --version-sync-only 2>/dev/null"
+    severity: warning
+    desc: >-
+      Version files must be in sync. Requires the github-release skill's
+      validate-pre-release.sh to be installed at vendor/bin/ (the runner's
+      command whitelist disallows ${CLAUDE_PLUGIN_ROOT} paths).
+
+  # CHANGELOG checks
+  - id: GR-8
+    type: contains
+    target: "CHANGELOG.md"
+    pattern: "[Unreleased]"
+    severity: warning
+    desc: "CHANGELOG.md must have an Unreleased section"
+
+  # Supply chain security checks
+  - id: GR-9
+    type: command
+    pattern: "gh release view --json assets --jq -e 'any(.assets[].name; test(\"sbom\"))' >/dev/null 2>&1"
+    severity: warning
+    desc: >-
+      Latest published release should have SBOM assets. `jq -e` exits with
+      code 1 when no asset name matches, so the runner sees a real failure
+      instead of a literal "false" stdout that would otherwise count as a
+      successful zero-exit.
+
+  - id: GR-10
+    type: command
+    pattern: "gh release view --json assets --jq -e '[.assets[].name] as $n | ($n|any(test(\"\\\\.sigstore\\\\.json$\"))) or ($n|any(test(\"\\\\.sigstore$\"))) or ($n|any(test(\"\\\\.bundle$\"))) or ($n|any(test(\"\\\\.sig$\")) and ($n|any(test(\"\\\\.pem$\"))))' >/dev/null 2>&1"
+    severity: warning
+    desc: >-
+      Latest published release should have cosign signature artefacts.
+      Accepted (in priority order): `.sigstore.json` (preferred — on the
+      OSSF Scorecard Signed-Releases allowlist), `.sigstore` (also on the
+      Scorecard allowlist), `.bundle` (legacy cosign default — bytes are
+      identical to `.sigstore.json`, only the filename differs), or BOTH
+      a detached `.sig` and matching `.pem` certificate (used by
+      netresearch/skill-repo-skill release workflow). A lone `.sig` or
+      lone `.pem` is incomplete and fails. `jq -e` ensures the boolean
+      is reflected in the exit code.
+
+  - id: GR-11
+    type: command
+    pattern: "git config user.signingkey >/dev/null 2>&1"
+    severity: info
+    desc: "Git signing is configured (signing key set)"
+
+  # Release pipeline integrity checks
+  - id: GR-12
+    type: command
+    pattern: "vendor/bin/validate-reusable-workflows.sh"
+    severity: error
+    desc: >-
+      Reusable-workflow reference in `.github/workflows/release*.yml` files
+      points to a path that no longer exists at the pinned SHA. Release
+      workflow will fail on tag push. Update the ref or remove the job.
+      Requires the validator at vendor/bin/.
+
+  - id: GR-13
+    type: command
+    pattern: "vendor/bin/check-changelog-links.py"
+    severity: warning
+    desc: >-
+      CHANGELOG.md reference-style header [X.Y.Z] missing matching
+      [X.Y.Z]: <URL> footer link. Add the link entry and update the
+      [Unreleased]: compare/vX.Y.Z...HEAD range to the new version.
+
+llm_reviews:
+  - id: GR-R1
+    domain: release-safety
+    severity: error
+    desc: "No dangerous release commands used in conversation"
+    prompt: |
+      Check the conversation for any of these dangerous commands that were EXECUTED (not just discussed):
+      - gh release create (creates lightweight tags, bypasses CI)
+      - gh release delete (doesn't fix immutable tag burning)
+      - gh release edit (immutable releases can't be edited)
+      - git tag without -s or -a flag for version tags
+      - git push --delete for tags
+      - git push origin :refs/tags/
+      If any were executed, report as FAIL with the specific command.
+
+  - id: GR-R2
+    domain: release-process
+    severity: warning
+    desc: "Release follows correct process"
+    prompt: |
+      If a release was performed in this conversation, verify it followed the correct process:
+      1. Version files were updated via a PR (not direct push to main)
+      2. Signed annotated tag was created with git tag -s (not git tag without -s)
+      3. gh release create was NOT used
+      4. The CI release workflow was relied upon for creating the GitHub release
+      If the process was not followed, explain what went wrong.
+
+  - id: GR-R3
+    domain: ecosystem-detection
+    severity: warning
+    desc: "All version files were updated during release"
+    prompt: |
+      If version files were updated during a release, check that ALL relevant files were found and updated:
+      - TYPO3: ext_emconf.php AND composer.json (if version field exists) AND Documentation/guides.xml
+      - Skill repos: plugin.json AND SKILL.md metadata.version
+      - Node.js: package.json AND package-lock.json
+      - CHANGELOG.md [Unreleased] section was promoted
+      Report any files that were missed.
