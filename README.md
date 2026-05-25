@@ -70,3 +70,47 @@ The daemon is configured entirely through environment variables or a `.env` file
 | `LLM_SYSTEM_PROMPT` | *(Empty)* | Raw system prompt override string. |
 | `LLM_SYSTEM_PROMPT_PATH`| *(Empty)* | File path to load custom system prompt from. |
 
+## System Architecture & Data Flow
+
+The labeler is built for low-latency firehose filtering and processing using a multi-worker async pipeline:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Contrails (WebSocket)
+    participant I as Ingestion Worker
+    participant L as LRU Cache
+    participant H as Slingshot Hydrator (REST)
+    participant LLM as llama.cpp (Gemma 4)
+    participant O as Ozone (Indigo SDK)
+
+    C->>I: Event Stream (Raw Post URI & Text)
+    critical Check Duplication
+        I->>L: Query post URI
+    end
+    alt Is Cached / Duplicate
+        I->>I: Drop Event
+    else Is New Event
+        I->>H: Request parent & quoted context
+        H-->>I: Return hydrated text blocks
+        I->>LLM: JSON Schema Prompt (is_meta_discourse?)
+        LLM-->>I: Return JSON Output (boolean + logprobs)
+        alt is_meta_discourse == true && probability >= 0.85
+            I->>O: Sign & emit com.atproto.label.defs#label
+        else probability < 0.85
+            I->>I: Discard / Log
+        end
+    end
+```
+
+### Component Directory Map
+
+- **Config Loader (`internal/config/`)**: Decodes and validates environment variables and custom runtime system prompt overrides.
+- **Pipeline Coordinator (`internal/pipeline/`)**: Directs multi-worker async flow, caching, cursor state persistence, and event processing.
+- **Services Package (`internal/services/`)**:
+  - `contrails.go`: Subscribes to filtered firehose WebSocket stream.
+  - `slingshot.go`: Hydrates parent & quote context from Edge RPC cache.
+  - `classifier.go`: Encodes posts into custom XML schemas and executes inference against `llama.cpp`.
+  - `ozone.go`: Signs and broadcasts cryptographic labels.
+
+
