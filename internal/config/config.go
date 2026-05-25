@@ -6,42 +6,42 @@ import (
 )
 
 type Config struct {
-	Port                 string
-	LogLevel             string
-	CursorFilePath       string
-	CursorRewindSeconds  int
-	HydrationWorkers     int
+	Port                  string
+	LogLevel              string
+	CursorFilePath        string
+	CursorRewindSeconds   int
+	HydrationWorkers      int
 	ClassificationWorkers int
-	GrazeFeedURI         string
-	ContrailsWSURL       string
-	SlingshotURL         string
-	LLMEndpoint          string
-	LLMModel             string
-	LLMTemperature       float64
-	OzoneEndpoint        string
-	LabelerDID           string
-	OzoneAdminToken      string
-	DryRun               bool
+	GrazeFeedURI          string
+	ContrailsWSURL        string
+	SlingshotURL          string
+	LLMEndpoint           string
+	LLMModel              string
+	LLMTemperature        float64
+	OzoneEndpoint         string
+	LabelerDID            string
+	OzoneAdminToken       string
+	DryRun                bool
 }
 
 func Load() (*Config, error) {
 	return &Config{
-		Port:                 getEnv("PORT", "8081"),
-		LogLevel:             getEnv("LOG_LEVEL", "info"),
-		CursorFilePath:       getEnv("CURSOR_FILE_PATH", "./data/cursor.json"),
-		CursorRewindSeconds:  getEnvInt("CURSOR_REWIND_SECONDS", 10),
-		HydrationWorkers:     getEnvInt("HYDRATION_WORKERS", 10),
+		Port:                  getEnv("PORT", "8081"),
+		LogLevel:              getEnv("LOG_LEVEL", "info"),
+		CursorFilePath:        getEnv("CURSOR_FILE_PATH", "./data/cursor.json"),
+		CursorRewindSeconds:   getEnvInt("CURSOR_REWIND_SECONDS", 10),
+		HydrationWorkers:      getEnvInt("HYDRATION_WORKERS", 10),
 		ClassificationWorkers: getEnvInt("CLASSIFICATION_WORKERS", 4),
-		GrazeFeedURI:         getEnv("GRAZE_FEED_URI", ""),
-		ContrailsWSURL:       getEnv("CONTRAILS_WS_URL", "wss://api.graze.social/app/contrail"),
-		SlingshotURL:         getEnv("SLINGSHOT_URL", "https://slingshot.microcosm.blue"),
-		LLMEndpoint:          getEnv("LLM_ENDPOINT", "http://localhost:8080/v1/"),
-		LLMModel:             getEnv("LLM_MODEL", "google/gemma-4-e2b-gguf"),
-		LLMTemperature:       getEnvFloat("LLM_TEMPERATURE", 0.0),
-		OzoneEndpoint:        getEnv("OZONE_ENDPOINT", "http://localhost:3000"),
-		LabelerDID:           getEnv("LABELER_DID", ""),
-		OzoneAdminToken:      getEnv("OZONE_ADMIN_TOKEN", ""),
-		DryRun:               getEnvBool("DRY_RUN", "false"),
+		GrazeFeedURI:          getEnv("GRAZE_FEED_URI", ""),
+		ContrailsWSURL:        getEnv("CONTRAILS_WS_URL", "wss://api.graze.social/app/contrail"),
+		SlingshotURL:          getEnv("SLINGSHOT_URL", "https://slingshot.microcosm.blue"),
+		LLMEndpoint:           getEnv("LLM_ENDPOINT", "http://localhost:8080/v1/"),
+		LLMModel:              getEnv("LLM_MODEL", "google/gemma-4-e2b-gguf"),
+		LLMTemperature:        getEnvFloat("LLM_TEMPERATURE", 0.0),
+		OzoneEndpoint:         getEnv("OZONE_ENDPOINT", "http://localhost:3000"),
+		LabelerDID:            getEnv("LABELER_DID", ""),
+		OzoneAdminToken:       getEnv("OZONE_ADMIN_TOKEN", ""),
+		DryRun:                getEnvBool("DRY_RUN", false),
 	}, nil
 }
 
@@ -53,8 +53,8 @@ func getEnv(key, fallback string) string {
 }
 
 func getEnvInt(key string, fallback int) int {
-	valStr := getEnv(key, "")
-	if valStr == "" {
+	valStr, ok := os.LookupEnv(key)
+	if !ok || valStr == "" {
 		return fallback
 	}
 	val, err := strconv.Atoi(valStr)
@@ -65,8 +65,8 @@ func getEnvInt(key string, fallback int) int {
 }
 
 func getEnvFloat(key string, fallback float64) float64 {
-	valStr := getEnv(key, "")
-	if valStr == "" {
+	valStr, ok := os.LookupEnv(key)
+	if !ok || valStr == "" {
 		return fallback
 	}
 	val, err := strconv.ParseFloat(valStr, 64)
@@ -76,11 +76,14 @@ func getEnvFloat(key string, fallback float64) float64 {
 	return val
 }
 
-func getEnvBool(key string, fallback string) bool {
-	valStr := getEnv(key, fallback)
+func getEnvBool(key string, fallback bool) bool {
+	valStr, ok := os.LookupEnv(key)
+	if !ok || valStr == "" {
+		return fallback
+	}
 	val, err := strconv.ParseBool(valStr)
 	if err != nil {
-		return false
+		return fallback
 	}
 	return val
 }
