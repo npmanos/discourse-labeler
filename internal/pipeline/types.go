@@ -12,7 +12,7 @@ type RawEvent struct {
 
 type JetstreamCommit struct {
 	Rev        string          `json:"rev"`
-	Type       string          `json:"type"` // "c" (create), "u" (update), "d" (delete)
+	Type       string          `json:"type"`       // "c" (create), "u" (update), "d" (delete)
 	Collection string          `json:"collection"` // e.g. "app.bsky.feed.post"
 	RKey       string          `json:"rkey"`
 	Record     json.RawMessage `json:"record,omitempty"`

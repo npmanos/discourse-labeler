@@ -205,4 +205,3 @@ func (lc *LLMClassifier) Classify(ctx context.Context, hp *types.HydratedPost) (
 
 	return result, nil
 }
-

@@ -19,5 +19,7 @@ linters:
 linters-settings:
   govet:
     enable-all: true
+    disable:
+      - fieldalignment
   gofmt:
     simplify: true
