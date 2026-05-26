@@ -35,10 +35,10 @@ services:
     volumes:
       - ./models:/models
     command: >
-      -m /models/gemma-4-e2b.gguf
+      -m /models/gemma-4-E2B-it-Q8_0.gguf
       --host 0.0.0.0
       --port 8080
       -c 8192
-      --hf-repo "google/gemma-4-e2b-gguf"
-      --hf-file "gemma-4-e2b.Q4_K_M.gguf"
+      --hf-repo "ggml-org/gemma-4-E2B-it-GGUF"
+      --hf-file "gemma-4-E2B-it-Q8_0.gguf"
     # --n-gpu-layers 99  # (Optional: Uncomment for GPU acceleration)
