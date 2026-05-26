@@ -70,7 +70,7 @@ func (oc *OzoneClient) IsAlreadyLabeled(ctx context.Context, targetURI string) (
 	}
 
 	for _, lbl := range res.Labels {
-		if lbl.Src == oc.LabelerDID && (lbl.Val == "meta_discourse" || lbl.Val == "possible_meta_discourse") {
+		if lbl.Src == oc.LabelerDID && (lbl.Val == "meta-discourse" || lbl.Val == "possible-meta-discourse") {
 			return true, nil
 		}
 	}
@@ -80,9 +80,9 @@ func (oc *OzoneClient) IsAlreadyLabeled(ctx context.Context, targetURI string) (
 
 // EmitLabel pushes an auto-moderation event adding the label to Ozone
 func (oc *OzoneClient) EmitLabel(ctx context.Context, result *types.ClassificationResult) error {
-	labelVal := "possible_meta_discourse"
+	labelVal := "possible-meta-discourse"
 	if result.Probability >= 0.85 {
-		labelVal = "meta_discourse"
+		labelVal = "meta-discourse"
 	}
 
 	payload := map[string]interface{}{

@@ -19,7 +19,7 @@ func TestOzoneIsAlreadyLabeledTrue(t *testing.T) {
 		response := map[string]interface{}{
 			"labels": []map[string]interface{}{
 				{
-					"val": "meta_discourse",
+					"val": "meta-discourse",
 					"src": "did:web:test-labeler",
 				},
 			},
