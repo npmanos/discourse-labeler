@@ -103,5 +103,5 @@ When modifying CI/CD workflows (`.github/workflows/*`), Makefiles, or build mani
 - [Design Specs](docs/superpowers/specs/)
 - [Implementation Plans](docs/superpowers/plans/)
 
-<!-- Last updated: May 2026 for Go 1.24.0 compatibility and linting standards -->
+<!-- Last updated: May 2026 to align Go 1.24.0 and Release Please trigger workflows -->
 
