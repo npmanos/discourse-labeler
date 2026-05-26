@@ -103,5 +103,5 @@ When modifying CI/CD workflows (`.github/workflows/*`), Makefiles, or build mani
 - [Design Specs](docs/superpowers/specs/)
 - [Implementation Plans](docs/superpowers/plans/)
 
-<!-- Last updated: May 2026 to resolve Release Please deprecation and target branches -->
+<!-- Last updated: May 2026 to resolve Release Please deprecation and llama model filenames -->
 
