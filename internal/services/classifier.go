@@ -90,7 +90,7 @@ func (lc *LLMClassifier) Classify(ctx context.Context, hp *types.HydratedPost) (
 
 	targetPost := formatPostInput(hp)
 
-	// Build prompt message array with exactly 5 few-shot examples from the spec
+	// Build prompt message array with few-shot examples
 	messages := []openai.ChatCompletionMessageParamUnion{
 		openai.SystemMessage(prompt),
 		// Example 1
@@ -134,6 +134,17 @@ func (lc *LLMClassifier) Classify(ctx context.Context, hp *types.HydratedPost) (
   </post>
 </posts>`),
 		openai.AssistantMessage(`{"is_meta_discourse": true}`),
+		// Example 6
+		openai.UserMessage(`<posts>
+  <post type="parent_post">
+    I have the right one 🤓
+https://bsky.app/profile/generalmusician.bsky.social/post/3lsrtbmb5q22k
+  </post>
+  <post type="target_post">
+    I think this is how we became Bluesky friends 😅
+  </post>
+</posts>`),
+		openai.AssistantMessage(`{"is_meta_discourse": false}`),
 		// Target Post
 		openai.UserMessage(targetPost),
 	}
