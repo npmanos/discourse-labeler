@@ -291,6 +291,10 @@ func (co *Coordinator) processClassification(ctx context.Context, hp *HydratedPo
 		return
 	}
 
+	if res != nil {
+		log.Printf("Classification result: URI=%s, IsMetaDiscourse=%t, Probability=%.4f", hp.TargetURI, res.IsMetaDiscourse, res.Probability)
+	}
+
 	if res != nil && res.IsMetaDiscourse {
 		if !co.DryRun {
 			already, err := co.OzoneQuery.IsAlreadyLabeled(ctx, hp.TargetURI)
@@ -301,6 +305,12 @@ func (co *Coordinator) processClassification(ctx context.Context, hp *HydratedPo
 			} else if err != nil {
 				log.Printf("Ozone query IsAlreadyLabeled failed: %v", err)
 			}
+		} else {
+			labelVal := "possible-meta-discourse"
+			if res.Probability >= 0.85 {
+				labelVal = "meta-discourse"
+			}
+			log.Printf("[DRY RUN] Would have emitted label %q to Ozone for URI=%s (probability: %.4f)", labelVal, hp.TargetURI, res.Probability)
 		}
 		co.incrementProcessedAndWriteCursor(hp, true)
 	} else {
