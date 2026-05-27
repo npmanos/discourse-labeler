@@ -5,7 +5,26 @@ import (
 	"testing"
 )
 
+func clearEnv(t *testing.T) {
+	vars := []string{
+		"PORT", "LOG_LEVEL", "CURSOR_FILE_PATH", "CURSOR_REWIND_SECONDS",
+		"HYDRATION_WORKERS", "CLASSIFICATION_WORKERS", "GRAZE_FEED_URI",
+		"CONTRAILS_WS_URL", "SLINGSHOT_URL", "LLM_ENDPOINT", "LLM_MODEL",
+		"LLM_TEMPERATURE", "OZONE_ENDPOINT", "LABELER_DID", "OZONE_ADMIN_TOKEN",
+		"DRY_RUN", "LLM_SYSTEM_PROMPT", "LLM_SYSTEM_PROMPT_PATH",
+	}
+	for _, v := range vars {
+		if val, exists := os.LookupEnv(v); exists {
+			os.Unsetenv(v)
+			t.Cleanup(func() {
+				os.Setenv(v, val)
+			})
+		}
+	}
+}
+
 func TestConfigLoadDefaults(t *testing.T) {
+	clearEnv(t)
 	cfg, err := Load()
 	if err != nil {
 		t.Fatalf("failed to load config: %v", err)
