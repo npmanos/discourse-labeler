@@ -332,7 +332,7 @@ https://bsky.app/profile/generalmusician.bsky.social/post/3lsrtbmb5q22k
 	}
 
 	// Calculate probability from logprobs by finding the target classification enum
-	if len(resp.Choices[0].Logprobs.Content) > 0 {
+	if resp.Choices[0].JSON.Logprobs.Valid() && len(resp.Choices[0].Logprobs.Content) > 0 {
 		found := false
 		for _, tc := range resp.Choices[0].Logprobs.Content {
 			trimmed := strings.ToLower(strings.Trim(tc.Token, " \t\n\r\"'{}[]:,"))
