@@ -298,7 +298,8 @@ func (co *Coordinator) processClassification(ctx context.Context, hp *HydratedPo
 	}
 
 	classification := res.TargetPost.Classification
-	log.Printf("Classification result: PostText=%q, Category=%s, Probability=%.4f, Reasoning=%s", hp.TargetText, classification, res.Probability, res.TargetPost.Reasoning)
+	log.Printf("Classification result: URI=%s, PostText=%q, Category=%s, Probability=%.4f, Reasoning=%s",
+		hp.TargetURI, hp.TargetText, classification, res.Probability, res.TargetPost.Reasoning)
 
 	switch classification {
 	case LabelDefiniteMeta, LabelLikelyMeta:
