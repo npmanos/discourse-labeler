@@ -55,6 +55,7 @@ func (m *mockClassifier) Classify(ctx context.Context, hp *HydratedPost) (*Class
 
 type mockOzone struct {
 	emitLabelFunc        func(ctx context.Context, result *ClassificationResult) error
+	emitEscalationFunc   func(ctx context.Context, result *ClassificationResult) error
 	isAlreadyLabeledFunc func(ctx context.Context, uri string) (bool, error)
 }
 
@@ -66,6 +67,9 @@ func (m *mockOzone) EmitLabel(ctx context.Context, result *ClassificationResult)
 }
 
 func (m *mockOzone) EmitEscalation(ctx context.Context, result *ClassificationResult) error {
+	if m.emitEscalationFunc != nil {
+		return m.emitEscalationFunc(ctx, result)
+	}
 	return nil
 }
 

@@ -101,9 +101,18 @@ type HydratedPost struct {
 	EventTimeUS      int64
 }
 
+type ClassificationLabel string
+
+const (
+	LabelDefiniteMeta ClassificationLabel = "definite_meta"
+	LabelLikelyMeta   ClassificationLabel = "likely_meta"
+	LabelNotMeta      ClassificationLabel = "not_meta"
+	LabelUnsure       ClassificationLabel = "unsure"
+)
+
 type PostClassification struct {
-	Reasoning      string `json:"reasoning"`
-	Classification string `json:"classification"`
+	Reasoning      string              `json:"reasoning"`
+	Classification ClassificationLabel `json:"classification"`
 }
 
 type ContextAnalysis struct {
@@ -118,5 +127,6 @@ type ClassificationResult struct {
 
 	ContextAnalysis ContextAnalysis
 	TargetPost      PostClassification
+	// TODO(cleanup): remove once categorical routing is fully implemented
 	IsMetaDiscourse bool
 }

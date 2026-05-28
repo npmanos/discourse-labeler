@@ -126,3 +126,7 @@ func (oc *OzoneClient) EmitLabel(ctx context.Context, result *types.Classificati
 
 	return nil
 }
+
+func (oc *OzoneClient) EmitEscalation(ctx context.Context, result *types.ClassificationResult) error {
+	return fmt.Errorf("EmitEscalation not implemented yet")
+}
