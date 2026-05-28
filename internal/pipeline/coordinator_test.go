@@ -47,9 +47,12 @@ func (m *mockClassifier) Classify(ctx context.Context, hp *HydratedPost) (*Class
 		return m.classifyFunc(ctx, hp)
 	}
 	return &ClassificationResult{
-		Post:            hp,
-		IsMetaDiscourse: false,
-		Probability:     0.1,
+		Post:        hp,
+		Probability: 0.1,
+		TargetPost: PostClassification{
+			Classification: LabelNotMeta,
+			Reasoning:      "Default mock non-meta response",
+		},
 	}, nil
 }
 
@@ -408,9 +411,12 @@ func TestCoordinator_ClassificationAndOzone(t *testing.T) {
 	classifier := &mockClassifier{
 		classifyFunc: func(ctx context.Context, hp *HydratedPost) (*ClassificationResult, error) {
 			return &ClassificationResult{
-				Post:            hp,
-				IsMetaDiscourse: true,
-				Probability:     0.95,
+				Post:        hp,
+				Probability: 0.95,
+				TargetPost: PostClassification{
+					Classification: LabelDefiniteMeta,
+					Reasoning:      "Definitely meta",
+				},
 			}, nil
 		},
 	}
@@ -513,8 +519,11 @@ func TestCoordinator_AtomicCursorUpdates(t *testing.T) {
 	classifier := &mockClassifier{
 		classifyFunc: func(ctx context.Context, hp *HydratedPost) (*ClassificationResult, error) {
 			return &ClassificationResult{
-				Post:            hp,
-				IsMetaDiscourse: false,
+				Post: hp,
+				TargetPost: PostClassification{
+					Classification: LabelNotMeta,
+					Reasoning:      "Not meta",
+				},
 			}, nil
 		},
 	}
@@ -567,5 +576,173 @@ func TestCoordinator_GracefulShutdown(t *testing.T) {
 	}
 	if err != nil && err != context.DeadlineExceeded && err != context.Canceled {
 		t.Errorf("unexpected error on cancellation: %v", err)
+	}
+}
+
+func TestCoordinator_CategoricalRouting(t *testing.T) {
+	ct, cleanup := setupCursorTracker(t, 0)
+	defer cleanup()
+
+	// 4 events to test 4 categories
+	events := []*RawEvent{
+		{
+			Did:  "did:plc:1",
+			Type: "commit",
+			Commit: &JetstreamCommit{
+				Collection: "app.bsky.feed.post",
+				RKey:       "r1",
+			},
+			TimeUS: 1000,
+		},
+		{
+			Did:  "did:plc:2",
+			Type: "commit",
+			Commit: &JetstreamCommit{
+				Collection: "app.bsky.feed.post",
+				RKey:       "r2",
+			},
+			TimeUS: 2000,
+		},
+		{
+			Did:  "did:plc:3",
+			Type: "commit",
+			Commit: &JetstreamCommit{
+				Collection: "app.bsky.feed.post",
+				RKey:       "r3",
+			},
+			TimeUS: 3000,
+		},
+		{
+			Did:  "did:plc:4",
+			Type: "commit",
+			Commit: &JetstreamCommit{
+				Collection: "app.bsky.feed.post",
+				RKey:       "r4",
+			},
+			TimeUS: 4000,
+		},
+	}
+
+	ingester := &mockIngester{
+		startFunc: func(ctx context.Context, cursor int64, out chan<- *RawEvent) error {
+			for _, ev := range events {
+				out <- ev
+			}
+			return nil
+		},
+	}
+
+	hydrator := &mockHydrator{
+		hydrateFunc: func(ctx context.Context, ev *RawEvent) (*HydratedPost, error) {
+			return &HydratedPost{
+				TargetDID:   ev.Did,
+				TargetRKey:  ev.Commit.RKey,
+				TargetURI:   "at://" + ev.Did + "/" + ev.Commit.Collection + "/" + ev.Commit.RKey,
+				TargetText:  "Post " + ev.Commit.RKey,
+				EventTimeUS: ev.TimeUS,
+			}, nil
+		},
+	}
+
+	classifier := &mockClassifier{
+		classifyFunc: func(ctx context.Context, hp *HydratedPost) (*ClassificationResult, error) {
+			var label ClassificationLabel
+			var prob float64
+			switch hp.TargetRKey {
+			case "r1":
+				label = LabelDefiniteMeta
+				prob = 0.95
+			case "r2":
+				label = LabelLikelyMeta
+				prob = 0.80
+			case "r3":
+				label = LabelUnsure
+				prob = 0.50
+			case "r4":
+				label = LabelNotMeta
+				prob = 0.05
+			}
+			return &ClassificationResult{
+				Post:        hp,
+				Probability: prob,
+				TargetPost: PostClassification{
+					Classification: label,
+					Reasoning:      "Reason for " + string(label),
+				},
+			}, nil
+		},
+	}
+
+	var emitLabelCalls []*ClassificationResult
+	var emitEscalationCalls []*ClassificationResult
+	var isAlreadyLabeledCalls []string
+	var ozoneMu sync.Mutex
+
+	ozone := &mockOzone{
+		isAlreadyLabeledFunc: func(ctx context.Context, uri string) (bool, error) {
+			ozoneMu.Lock()
+			isAlreadyLabeledCalls = append(isAlreadyLabeledCalls, uri)
+			ozoneMu.Unlock()
+			return false, nil
+		},
+		emitLabelFunc: func(ctx context.Context, result *ClassificationResult) error {
+			ozoneMu.Lock()
+			emitLabelCalls = append(emitLabelCalls, result)
+			ozoneMu.Unlock()
+			return nil
+		},
+		emitEscalationFunc: func(ctx context.Context, result *ClassificationResult) error {
+			ozoneMu.Lock()
+			emitEscalationCalls = append(emitEscalationCalls, result)
+			ozoneMu.Unlock()
+			return nil
+		},
+	}
+
+	co := NewCoordinator(ingester, hydrator, classifier, ozone, ozone, ct, 0, 1, 1, false)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	_ = co.Run(ctx)
+
+	ozoneMu.Lock()
+	defer ozoneMu.Unlock()
+
+	// 1. Definite and Likely Meta should trigger IsAlreadyLabeled query and EmitLabel
+	// We expect 2 IsAlreadyLabeled calls (for r1 and r2)
+	if len(isAlreadyLabeledCalls) != 2 {
+		t.Errorf("Expected 2 IsAlreadyLabeled calls, got %d", len(isAlreadyLabeledCalls))
+	}
+
+	// We expect 2 EmitLabel calls (for r1 and r2)
+	if len(emitLabelCalls) != 2 {
+		t.Errorf("Expected 2 EmitLabel calls, got %d", len(emitLabelCalls))
+	} else {
+		hasDefinite := false
+		hasLikely := false
+		for _, call := range emitLabelCalls {
+			if call.TargetPost.Classification == LabelDefiniteMeta {
+				hasDefinite = true
+			}
+			if call.TargetPost.Classification == LabelLikelyMeta {
+				hasLikely = true
+			}
+		}
+		if !hasDefinite {
+			t.Error("Expected an EmitLabel call with definite_meta")
+		}
+		if !hasLikely {
+			t.Error("Expected an EmitLabel call with likely_meta")
+		}
+	}
+
+	// 2. Unsure should trigger EmitEscalation
+	if len(emitEscalationCalls) != 1 {
+		t.Errorf("Expected 1 EmitEscalation call, got %d", len(emitEscalationCalls))
+	} else {
+		if emitEscalationCalls[0].TargetPost.Classification != LabelUnsure {
+			t.Errorf("Expected EmitEscalation call to be unsure, got %s", emitEscalationCalls[0].TargetPost.Classification)
+		}
 	}
 }

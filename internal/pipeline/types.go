@@ -127,6 +127,4 @@ type ClassificationResult struct {
 
 	ContextAnalysis ContextAnalysis
 	TargetPost      PostClassification
-	// TODO(cleanup): remove once categorical routing is fully implemented
-	IsMetaDiscourse bool
 }

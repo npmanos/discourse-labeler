@@ -328,7 +328,6 @@ https://bsky.app/profile/generalmusician.bsky.social/post/3lsrtbmb5q22k
 		Probability:     1.0, // Default to 100% confidence if logprobs are absent
 		ContextAnalysis: schemaResp.ContextAnalysis,
 		TargetPost:      schemaResp.TargetPost,
-		IsMetaDiscourse: schemaResp.TargetPost.Classification == types.LabelDefiniteMeta || schemaResp.TargetPost.Classification == types.LabelLikelyMeta,
 	}
 
 	// Calculate probability from logprobs by finding the target classification enum
