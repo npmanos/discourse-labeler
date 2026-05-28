@@ -81,6 +81,9 @@ func (oc *OzoneClient) IsAlreadyLabeled(ctx context.Context, targetURI string) (
 
 // EmitLabel pushes an auto-moderation event adding the label to Ozone
 func (oc *OzoneClient) EmitLabel(ctx context.Context, result *types.ClassificationResult) error {
+	if result == nil || result.Post == nil {
+		return fmt.Errorf("invalid classification result or missing post context")
+	}
 	labelVal := "possible-meta-discourse"
 	if result.TargetPost.Classification == types.LabelDefiniteMeta {
 		labelVal = "meta-discourse"
@@ -131,6 +134,9 @@ func (oc *OzoneClient) EmitLabel(ctx context.Context, result *types.Classificati
 }
 
 func (oc *OzoneClient) EmitEscalation(ctx context.Context, result *types.ClassificationResult) error {
+	if result == nil || result.Post == nil {
+		return fmt.Errorf("invalid classification result or missing post context")
+	}
 	commentVal := formatOzoneComment(result)
 
 	payload := map[string]interface{}{
