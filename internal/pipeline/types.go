@@ -101,9 +101,22 @@ type HydratedPost struct {
 	EventTimeUS      int64
 }
 
+type PostClassification struct {
+	Reasoning      string `json:"reasoning"`
+	Classification string `json:"classification"`
+}
+
+type ContextAnalysis struct {
+	ParentPost *PostClassification `json:"parent_post"`
+	QuotePost  *PostClassification `json:"quote_post"`
+}
+
 // ClassificationResult contains LLM evaluation metrics
 type ClassificationResult struct {
-	Post            *HydratedPost
+	Post        *HydratedPost
+	Probability float64
+
+	ContextAnalysis ContextAnalysis
+	TargetPost      PostClassification
 	IsMetaDiscourse bool
-	Probability     float64
 }
