@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	types "github.com/npmanos/discourse-labeler/internal/pipeline"
@@ -81,16 +82,18 @@ func (oc *OzoneClient) IsAlreadyLabeled(ctx context.Context, targetURI string) (
 // EmitLabel pushes an auto-moderation event adding the label to Ozone
 func (oc *OzoneClient) EmitLabel(ctx context.Context, result *types.ClassificationResult) error {
 	labelVal := "possible-meta-discourse"
-	if result.Probability >= 0.85 {
+	if result.TargetPost.Classification == types.LabelDefiniteMeta {
 		labelVal = "meta-discourse"
 	}
+
+	commentVal := formatOzoneComment(result)
 
 	payload := map[string]interface{}{
 		"event": map[string]interface{}{
 			"$type":           "tools.ozone.moderation.defs#modEventLabel",
 			"createLabelVals": []string{labelVal},
 			"negateLabelVals": []string{},
-			"comment":         fmt.Sprintf("Auto-classified with probability %.2f", result.Probability),
+			"comment":         commentVal,
 		},
 		"subject": map[string]interface{}{
 			"$type": "com.atproto.repo.strongRef",
@@ -128,5 +131,66 @@ func (oc *OzoneClient) EmitLabel(ctx context.Context, result *types.Classificati
 }
 
 func (oc *OzoneClient) EmitEscalation(ctx context.Context, result *types.ClassificationResult) error {
-	return fmt.Errorf("EmitEscalation not implemented yet")
+	commentVal := formatOzoneComment(result)
+
+	payload := map[string]interface{}{
+		"event": map[string]interface{}{
+			"$type":      "tools.ozone.moderation.defs#modEventEscalate",
+			"comment":    commentVal,
+			"escalateTo": "admin",
+		},
+		"subject": map[string]interface{}{
+			"$type": "com.atproto.repo.strongRef",
+			"uri":   result.Post.TargetURI,
+			"cid":   "", // Omit for general StrongRef parsing in Ozone
+		},
+		"createdBy": oc.LabelerDID,
+	}
+
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	endpoint := fmt.Sprintf("%s/xrpc/tools.ozone.moderation.emitEvent", oc.Endpoint)
+	req, err := http.NewRequestWithContext(ctx, "POST", endpoint, bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", oc.AdminToken))
+
+	resp, err := oc.HTTPClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
+		return fmt.Errorf("emitEvent non-success: %s", resp.Status)
+	}
+
+	return nil
+}
+
+func formatOzoneComment(result *types.ClassificationResult) string {
+	var sb strings.Builder
+	sb.WriteString("[Target Post Analysis]\n")
+	sb.WriteString(fmt.Sprintf("Classification: %s\n", result.TargetPost.Classification))
+	sb.WriteString(fmt.Sprintf("Reasoning: %s\n", result.TargetPost.Reasoning))
+
+	if result.ContextAnalysis.ParentPost != nil {
+		sb.WriteString("\n[Context Analysis - Parent Post]\n")
+		sb.WriteString(fmt.Sprintf("Classification: %s\n", result.ContextAnalysis.ParentPost.Classification))
+		sb.WriteString(fmt.Sprintf("Reasoning: %s\n", result.ContextAnalysis.ParentPost.Reasoning))
+	}
+
+	if result.ContextAnalysis.QuotePost != nil {
+		sb.WriteString("\n[Context Analysis - Quoted Post]\n")
+		sb.WriteString(fmt.Sprintf("Classification: %s\n", result.ContextAnalysis.QuotePost.Classification))
+		sb.WriteString(fmt.Sprintf("Reasoning: %s\n", result.ContextAnalysis.QuotePost.Reasoning))
+	}
+
+	return sb.String()
 }
