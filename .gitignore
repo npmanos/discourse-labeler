@@ -135,4 +135,8 @@ go.work
 # Statically compiled binaries
 /labeler
 
+# Local build output and runtime data
+/bin/
+/data/
+
 
