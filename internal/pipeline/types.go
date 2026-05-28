@@ -101,9 +101,30 @@ type HydratedPost struct {
 	EventTimeUS      int64
 }
 
+type ClassificationLabel string
+
+const (
+	LabelDefiniteMeta ClassificationLabel = "definite_meta"
+	LabelLikelyMeta   ClassificationLabel = "likely_meta"
+	LabelNotMeta      ClassificationLabel = "not_meta"
+	LabelUnsure       ClassificationLabel = "unsure"
+)
+
+type PostClassification struct {
+	Reasoning      string              `json:"reasoning"`
+	Classification ClassificationLabel `json:"classification"`
+}
+
+type ContextAnalysis struct {
+	ParentPost *PostClassification `json:"parent_post"`
+	QuotePost  *PostClassification `json:"quote_post"`
+}
+
 // ClassificationResult contains LLM evaluation metrics
 type ClassificationResult struct {
-	Post            *HydratedPost
-	IsMetaDiscourse bool
-	Probability     float64
+	Post        *HydratedPost
+	Probability float64
+
+	ContextAnalysis ContextAnalysis
+	TargetPost      PostClassification
 }

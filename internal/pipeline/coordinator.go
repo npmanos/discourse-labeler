@@ -25,6 +25,7 @@ type Classifier interface {
 // LabelEmitter defines the interface for query and emission of labels.
 type LabelEmitter interface {
 	EmitLabel(ctx context.Context, result *ClassificationResult) error
+	EmitEscalation(ctx context.Context, result *ClassificationResult) error
 	IsAlreadyLabeled(ctx context.Context, uri string) (bool, error)
 }
 
@@ -291,11 +292,17 @@ func (co *Coordinator) processClassification(ctx context.Context, hp *HydratedPo
 		return
 	}
 
-	if res != nil {
-		log.Printf("Classification result: URI=%s, IsMetaDiscourse=%t, Probability=%.4f", hp.TargetURI, res.IsMetaDiscourse, res.Probability)
+	if res == nil {
+		co.incrementProcessedAndWriteCursor(hp, false)
+		return
 	}
 
-	if res != nil && res.IsMetaDiscourse {
+	classification := res.TargetPost.Classification
+	log.Printf("Classification result: URI=%s, PostText=%q, Category=%s, Probability=%.4f, Reasoning=%s",
+		hp.TargetURI, hp.TargetText, classification, res.Probability, res.TargetPost.Reasoning)
+
+	switch classification {
+	case LabelDefiniteMeta, LabelLikelyMeta:
 		if !co.DryRun {
 			already, err := co.OzoneQuery.IsAlreadyLabeled(ctx, hp.TargetURI)
 			if err == nil && !already {
@@ -307,13 +314,24 @@ func (co *Coordinator) processClassification(ctx context.Context, hp *HydratedPo
 			}
 		} else {
 			labelVal := "possible-meta-discourse"
-			if res.Probability >= 0.85 {
+			if classification == LabelDefiniteMeta {
 				labelVal = "meta-discourse"
 			}
 			log.Printf("[DRY RUN] Would have emitted label %q to Ozone for URI=%s (probability: %.4f)", labelVal, hp.TargetURI, res.Probability)
 		}
 		co.incrementProcessedAndWriteCursor(hp, true)
-	} else {
+
+	case LabelUnsure:
+		if !co.DryRun {
+			if err := co.OzoneClient.EmitEscalation(ctx, res); err != nil {
+				log.Printf("Failed to emit escalation to Ozone: %v", err)
+			}
+		} else {
+			log.Printf("[DRY RUN] Would have emitted escalation to Ozone for URI=%s (probability: %.4f)", hp.TargetURI, res.Probability)
+		}
+		co.incrementProcessedAndWriteCursor(hp, true)
+
+	default:
 		co.incrementProcessedAndWriteCursor(hp, false)
 	}
 }
