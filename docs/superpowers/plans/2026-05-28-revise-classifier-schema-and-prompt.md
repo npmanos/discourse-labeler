@@ -1,6 +1,6 @@
 # Revised Classifier Schema and Prompt Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Update the Bluesky Meta-Discourse Labeler daemon to apply a revised categorical classification system prompt and schema, routing definite/likely meta to public labels, and escalating unsure cases to Ozone.
 
@@ -15,7 +15,7 @@
 **Files:**
 - Modify: `internal/pipeline/types.go`
 
-- [ ] **Step 1: Write minimal structures for categorical classification details**
+- [x] **Step 1: Write minimal structures for categorical classification details**
   Add `PostClassification`, `ContextAnalysis` and update `ClassificationResult` in `internal/pipeline/types.go`.
 
   ```go
@@ -41,7 +41,7 @@
   }
   ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
   ```bash
   git add internal/pipeline/types.go
   git commit -m "feat: add PostClassification and ContextAnalysis structs to pipeline types"
@@ -54,7 +54,7 @@
 **Files:**
 - Modify: `internal/pipeline/coordinator.go`
 
-- [ ] **Step 1: Expand interface to support EmitEscalation**
+- [x] **Step 1: Expand interface to support EmitEscalation**
   Modify lines 25-30 in `internal/pipeline/coordinator.go` to declare `EmitEscalation`.
 
   ```go
@@ -66,7 +66,7 @@
   }
   ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
   ```bash
   git add internal/pipeline/coordinator.go
   git commit -m "refactor: add EmitEscalation to LabelEmitter interface"
@@ -80,7 +80,7 @@
 - Modify: `internal/services/ozone.go`
 - Modify: `internal/services/ozone_test.go`
 
-- [ ] **Step 1: Write a failing test for Ozone human escalation**
+- [x] **Step 1: Write a failing test for Ozone human escalation**
   Add a test to verify `EmitEscalation` calls the tools.ozone endpoint with `modEventEscalate`.
 
   ```go
@@ -127,11 +127,11 @@
   }
   ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
   Run: `go test -v ./internal/services/... -run TestOzoneEmitEscalationSuccess`
   Expected: FAIL (compilation failure / EmitEscalation not defined)
 
-- [ ] **Step 3: Implement EmitEscalation and formatOzoneComment**
+- [x] **Step 3: Implement EmitEscalation and formatOzoneComment**
   Implement `EmitEscalation` and rewrite `EmitLabel` in `internal/services/ozone.go` to format human-readable comments.
 
   ```go
@@ -242,11 +242,11 @@
   }
   ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
   Run: `go test -v ./internal/services/... -run TestOzoneEmitEscalationSuccess`
   Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
   ```bash
   git add internal/services/ozone.go internal/services/ozone_test.go
   git commit -m "feat: implement EmitEscalation and rich Ozone comment formatting"
@@ -260,7 +260,7 @@
 - Modify: `internal/services/classifier.go`
 - Modify: `internal/services/classifier_test.go`
 
-- [ ] **Step 1: Write a failing test for rich classification parsing**
+- [x] **Step 1: Write a failing test for rich classification parsing**
   Update unit tests in `internal/services/classifier_test.go` to assert the parsed `ContextAnalysis` and `TargetPost` structures.
 
   ```go
@@ -323,11 +323,11 @@
   }
   ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
   Run: `go test -v ./internal/services/... -run TestLLMClassifierMetaDiscourseTrue`
   Expected: FAIL (compilation errors / unmarshal failure due to outdated structures)
 
-- [ ] **Step 3: Implement prompt, schema maps, few-shots, and enum parsing in `classifier.go`**
+- [x] **Step 3: Implement prompt, schema maps, few-shots, and enum parsing in `classifier.go`**
   Modify `internal/services/classifier.go` to match the approved design.
 
   ```go
@@ -601,12 +601,12 @@ https://bsky.app/profile/generalmusician.bsky.social/post/3lsrtbmb5q22k
 	return result, nil
   ```
 
-- [ ] **Step 4: Adapt remaining classifier_test.go unit tests and run**
+- [x] **Step 4: Adapt remaining classifier_test.go unit tests and run**
   Adapt all mock JSON models in `classifier_test.go` to match the new structure, and run:
   `go test -v ./internal/services/...`
   Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
   ```bash
   git add internal/services/classifier.go internal/services/classifier_test.go
   git commit -m "feat: implement revised system prompt, schema maps, logprob calculations, and updated few-shots"
@@ -620,21 +620,21 @@ https://bsky.app/profile/generalmusician.bsky.social/post/3lsrtbmb5q22k
 - Modify: `internal/pipeline/coordinator.go`
 - Modify: `internal/pipeline/coordinator_test.go`
 
-- [ ] **Step 1: Write failing tests in coordinator_test.go**
+- [x] **Step 1: Write failing tests in coordinator_test.go**
   Adapt the mock structures in `coordinator_test.go` to utilize `TargetPost` and categorical enums, verifying that both label emission and escalation triggers work as expected.
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
   Run: `go test -v ./internal/pipeline/...`
   Expected: FAIL
 
-- [ ] **Step 3: Implement processClassification routing in `coordinator.go`**
+- [x] **Step 3: Implement processClassification routing in `coordinator.go`**
   Implement the categorical routing logic and replace `hp.TargetURI` with `%q` formatted `hp.TargetText` in the coordinator debug logs.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
   Run: `go test -v ./internal/pipeline/...`
   Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
   ```bash
   git add internal/pipeline/coordinator.go internal/pipeline/coordinator_test.go
   git commit -m "feat: implement categorical routing and rich text debugging in coordinator"
@@ -647,22 +647,22 @@ https://bsky.app/profile/generalmusician.bsky.social/post/3lsrtbmb5q22k
 **Files:**
 - Modify: None (run verification tools)
 
-- [ ] **Step 1: Standardize formatting**
+- [x] **Step 1: Standardize formatting**
   Run:
   ```bash
   go fmt ./...
   go run golang.org/x/tools/cmd/goimports@latest -w .
   ```
 
-- [ ] **Step 2: Run all tests**
+- [x] **Step 2: Run all tests**
   Run: `go test -v ./...`
   Expected: PASS (All tests across the entire repository)
 
-- [ ] **Step 3: Harness validation**
+- [x] **Step 3: Harness validation**
   Run: `make verify-harness`
   Expected: PASS
 
-- [ ] **Step 4: Push feature branch**
+- [x] **Step 4: Push feature branch**
   Push all changes to origin:
   ```bash
   git push -u origin feature/revised-prompt-schema
