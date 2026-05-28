@@ -65,6 +65,10 @@ func (m *mockOzone) EmitLabel(ctx context.Context, result *ClassificationResult)
 	return nil
 }
 
+func (m *mockOzone) EmitEscalation(ctx context.Context, result *ClassificationResult) error {
+	return nil
+}
+
 func (m *mockOzone) IsAlreadyLabeled(ctx context.Context, uri string) (bool, error) {
 	if m.isAlreadyLabeledFunc != nil {
 		return m.isAlreadyLabeledFunc(ctx, uri)

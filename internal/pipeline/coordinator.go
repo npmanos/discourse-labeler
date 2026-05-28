@@ -25,6 +25,7 @@ type Classifier interface {
 // LabelEmitter defines the interface for query and emission of labels.
 type LabelEmitter interface {
 	EmitLabel(ctx context.Context, result *ClassificationResult) error
+	EmitEscalation(ctx context.Context, result *ClassificationResult) error
 	IsAlreadyLabeled(ctx context.Context, uri string) (bool, error)
 }
 
