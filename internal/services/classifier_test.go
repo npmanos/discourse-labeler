@@ -17,29 +17,25 @@ func TestLLMClassifierMetaDiscourseTrue(t *testing.T) {
 			"choices": []map[string]interface{}{
 				{
 					"message": map[string]string{
-						"content": `{"is_meta_discourse": true}`,
+						"content": `{
+							"context_analysis": {
+								"parent_post": {
+									"reasoning": "Explicitly analyzes Bluesky echo chambers",
+									"classification": "definite_meta"
+								},
+								"quote_post": null
+							},
+							"target_post": {
+								"reasoning": "Agrees and discusses platform vibes",
+								"classification": "definite_meta"
+							}
+						}`,
 					},
 					"logprobs": map[string]interface{}{
 						"content": []map[string]interface{}{
 							{
-								"token":   "{",
-								"logprob": -0.001,
-							},
-							{
-								"token":   "\"is_meta_discourse\"",
-								"logprob": -0.002,
-							},
-							{
-								"token":   ":",
-								"logprob": -0.003,
-							},
-							{
-								"token":   "true",
+								"token":   "definite_meta",
 								"logprob": -0.051293, // Exp(-0.051293) ~ 0.95
-							},
-							{
-								"token":   "}",
-								"logprob": -0.004,
 							},
 						},
 					},
@@ -53,7 +49,7 @@ func TestLLMClassifierMetaDiscourseTrue(t *testing.T) {
 
 	classifier := NewLLMClassifier(server.URL+"/v1/", "test-model")
 	hp := &types.HydratedPost{
-		TargetText: "Bluesky is such a toxic bubble right now, standard bad vibes.",
+		TargetText: "Bluesky has echo chambers",
 	}
 
 	res, err := classifier.Classify(context.Background(), hp)
@@ -61,10 +57,12 @@ func TestLLMClassifierMetaDiscourseTrue(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if !res.IsMetaDiscourse {
-		t.Error("expected IsMetaDiscourse to be true")
+	if res.TargetPost.Classification != "definite_meta" {
+		t.Errorf("expected Classification definite_meta, got %s", res.TargetPost.Classification)
 	}
-	// Expected probability calculated from 'true' token (~0.95), not '{' (~0.999)
+	if res.ContextAnalysis.ParentPost == nil || res.ContextAnalysis.ParentPost.Classification != "definite_meta" {
+		t.Errorf("expected parent post definite_meta, got: %+v", res.ContextAnalysis.ParentPost)
+	}
 	if res.Probability < 0.94 || res.Probability > 0.96 {
 		t.Errorf("expected Probability near 0.95, got %f", res.Probability)
 	}
@@ -76,29 +74,22 @@ func TestLLMClassifierMetaDiscourseFalse(t *testing.T) {
 			"choices": []map[string]interface{}{
 				{
 					"message": map[string]string{
-						"content": `{"is_meta_discourse": false}`,
+						"content": `{
+							"context_analysis": {
+								"parent_post": null,
+								"quote_post": null
+							},
+							"target_post": {
+								"reasoning": "Discusses programming in Go and Jetstream, which is technical and not meta-discourse.",
+								"classification": "not_meta"
+							}
+						}`,
 					},
 					"logprobs": map[string]interface{}{
 						"content": []map[string]interface{}{
 							{
-								"token":   "{",
-								"logprob": -0.001,
-							},
-							{
-								"token":   "\"is_meta_discourse\"",
-								"logprob": -0.002,
-							},
-							{
-								"token":   ":",
-								"logprob": -0.003,
-							},
-							{
-								"token":   "false",
+								"token":   "not_meta",
 								"logprob": -0.10536, // Exp(-0.10536) ~ 0.90
-							},
-							{
-								"token":   "}",
-								"logprob": -0.004,
 							},
 						},
 					},
@@ -120,10 +111,15 @@ func TestLLMClassifierMetaDiscourseFalse(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if res.IsMetaDiscourse {
-		t.Error("expected IsMetaDiscourse to be false")
+	if res.TargetPost.Classification != "not_meta" {
+		t.Errorf("expected Classification not_meta, got %s", res.TargetPost.Classification)
 	}
-	// Expected probability calculated from 'false' token (~0.90)
+	if res.ContextAnalysis.ParentPost != nil {
+		t.Errorf("expected parent post to be nil, got: %+v", res.ContextAnalysis.ParentPost)
+	}
+	if res.ContextAnalysis.QuotePost != nil {
+		t.Errorf("expected quote post to be nil, got: %+v", res.ContextAnalysis.QuotePost)
+	}
 	if res.Probability < 0.89 || res.Probability > 0.91 {
 		t.Errorf("expected Probability near 0.90, got %f", res.Probability)
 	}
@@ -163,7 +159,16 @@ func TestLLMClassifierWithSystemPromptOverride(t *testing.T) {
 			"choices": []map[string]interface{}{
 				{
 					"message": map[string]string{
-						"content": `{"is_meta_discourse": false}`,
+						"content": `{
+							"context_analysis": {
+								"parent_post": null,
+								"quote_post": null
+							},
+							"target_post": {
+								"reasoning": "some reasoning",
+								"classification": "not_meta"
+							}
+						}`,
 					},
 				},
 			},
@@ -216,7 +221,22 @@ func TestLLMClassifierParentAndQuoted(t *testing.T) {
 			"choices": []map[string]interface{}{
 				{
 					"message": map[string]string{
-						"content": `{"is_meta_discourse": true}`,
+						"content": `{
+							"context_analysis": {
+								"parent_post": {
+									"reasoning": "Discusses bluesky vibes, which is meta-discourse",
+									"classification": "definite_meta"
+								},
+								"quote_post": {
+									"reasoning": "Discusses quoting some other discourse",
+									"classification": "likely_meta"
+								}
+							},
+							"target_post": {
+								"reasoning": "Replies to parent with standard target text",
+								"classification": "likely_meta"
+							}
+						}`,
 					},
 				},
 			},
@@ -239,7 +259,13 @@ func TestLLMClassifierParentAndQuoted(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if !res.IsMetaDiscourse {
-		t.Errorf("expected classification to be true")
+	if res.TargetPost.Classification != "likely_meta" {
+		t.Errorf("expected classification likely_meta, got: %s", res.TargetPost.Classification)
+	}
+	if res.ContextAnalysis.ParentPost == nil || res.ContextAnalysis.ParentPost.Classification != "definite_meta" {
+		t.Errorf("expected parent post classification definite_meta, got: %+v", res.ContextAnalysis.ParentPost)
+	}
+	if res.ContextAnalysis.QuotePost == nil || res.ContextAnalysis.QuotePost.Classification != "likely_meta" {
+		t.Errorf("expected quote post classification likely_meta, got: %+v", res.ContextAnalysis.QuotePost)
 	}
 }
