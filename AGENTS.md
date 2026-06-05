@@ -95,6 +95,12 @@ To ensure linting runs smoothly in the GitHub Actions pipeline:
 
 When modifying CI/CD workflows (`.github/workflows/*`), Makefiles, or build manifests, a minor non-functional update (such as a comment, timestamp, or note) MUST be made to `AGENTS.md` in the exact same commit to satisfy the Level 3 drift verification checks of `make verify-harness`.
 
+### 6. Personal User Instructions
+
+Personal user instructions are contained in `AGENTS.local.md` and those instructions override the instructions above.
+
+@AGENTS.local.md
+
 ---
 
 ## References
@@ -103,5 +109,5 @@ When modifying CI/CD workflows (`.github/workflows/*`), Makefiles, or build mani
 - [Design Specs](docs/superpowers/specs/)
 - [Implementation Plans](docs/superpowers/plans/)
 
-<!-- Last updated: June 2026 to adopt git flow commands -->
+<!-- Last updated: June 2026 to adopt git flow commands and include local overrides -->
 
