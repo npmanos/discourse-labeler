@@ -55,8 +55,8 @@ Before starting a new task, always pull the latest changes from `develop` and cr
 git checkout develop
 git pull origin develop
 
-# Create your dedicated feature branch
-git checkout -b feature/your-feature-name
+# Create your dedicated feature branch using git flow
+git flow feature start your-feature-name
 ```
 
 ### 2. Synchronization Requirement: Push All Changes
@@ -73,8 +73,8 @@ When committing your work:
 git add .
 git commit -m "feat: implement feature xyz"
 
-# Push to the remote origin
-git push -u origin feature/your-feature-name
+# Publish the feature branch to the remote origin using git flow
+git flow feature publish
 ```
 
 ### 3. Pull Requests & Code Review
@@ -103,5 +103,5 @@ When modifying CI/CD workflows (`.github/workflows/*`), Makefiles, or build mani
 - [Design Specs](docs/superpowers/specs/)
 - [Implementation Plans](docs/superpowers/plans/)
 
-<!-- Last updated: May 2026 to resolve Release Please deprecation and llama model filenames -->
+<!-- Last updated: June 2026 to adopt git flow commands -->
 
