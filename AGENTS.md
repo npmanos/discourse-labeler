@@ -41,22 +41,26 @@ We adhere strictly to the **git-flow** branching model for all project modificat
 * **`main`:** Production-ready code. Matches the latest stable release.
 * **`develop`:** Integration branch for the latest development changes. Features are merged here to prepare for release.
 
-#### Supporting Branches
+#### Topic Branches
 * **`feature/<name>`:** Used to build specific features or tasks.
-  * *Workflow:* Branch off `develop`, build the feature, test it, push changes, and open a Pull Request back into `develop`.
+  * *Workflow:* Parent is `develop`. Merges into `develop`, rebases from `develop`.
+* **`bugfix/<name>`:** Used to resolve non-emergency bugs.
+  * *Workflow:* Parent is `develop`. Merges into `develop`, rebases from `develop`.
 * **`release/<version>`:** Prepares a release from `develop` to `main`.
-* **`hotfix/<name>`:** Emergency fixes targeting `main` directly.
+  * *Workflow:* Parent is `main`, start point is `develop`. Merges into `main`, merges from `main` back into `develop`, and tags on finish.
+* **`hotfix/<name>`:** Emergency fixes targeting production directly.
+  * *Workflow:* Parent is `main`. Merges into `main`, rebases from `main`, and tags on finish.
 
 #### Agent Workflow Commands
-Before starting a new task, always pull the latest changes from `develop` and create a dedicated feature branch:
+Before starting a new task, always pull the latest changes from `develop` and create a dedicated topic branch:
 
 ```bash
 # Ensure you are on develop and fully updated
 git checkout develop
 git pull origin develop
 
-# Create your dedicated feature branch using git flow
-git flow feature start your-feature-name
+# Create your dedicated topic branch using git flow
+git flow <branch-type> start your-branch-name
 ```
 
 ### 2. Synchronization Requirement: Push All Changes
@@ -73,8 +77,8 @@ When committing your work:
 git add .
 git commit -m "feat: implement feature xyz"
 
-# Publish the feature branch to the remote origin using git flow
-git flow feature publish
+# Publish the topic branch to the remote origin using git flow
+git flow <branch-type> publish
 ```
 
 ### 3. Pull Requests & Code Review
@@ -109,5 +113,5 @@ Personal user instructions are contained in `AGENTS.local.md` and those instruct
 - [Design Specs](docs/superpowers/specs/)
 - [Implementation Plans](docs/superpowers/plans/)
 
-<!-- Last updated: June 2026 to adopt git flow commands and include local overrides -->
+<!-- Last updated: June 2026 to adopt git flow commands, define topic branches, and include local overrides -->
 
