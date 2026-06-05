@@ -47,6 +47,7 @@ func (sh *SlingshotHydrator) Hydrate(ctx context.Context, ev *types.RawEvent) (*
 		TargetDID:   ev.Did,
 		TargetRKey:  ev.Commit.RKey,
 		TargetURI:   targetURI,
+		TargetCID:   ev.Commit.CID,
 		TargetText:  record.Text,
 		EventTimeUS: ev.TimeUS,
 	}

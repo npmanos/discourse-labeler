@@ -34,6 +34,7 @@ func TestSlingshotHydratorSuccess(t *testing.T) {
 			RKey:       "222",
 			Collection: "app.bsky.feed.post",
 			Record:     []byte(rawRecord),
+			CID:        "bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua",
 		},
 	}
 
@@ -45,6 +46,9 @@ func TestSlingshotHydratorSuccess(t *testing.T) {
 
 	if hp.TargetText != "Target post text!" {
 		t.Errorf("expected TargetText Target post text!, got %s", hp.TargetText)
+	}
+	if hp.TargetCID != "bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua" {
+		t.Errorf("expected TargetCID bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua, got %s", hp.TargetCID)
 	}
 	if hp.ParentText != "Parent text content!" {
 		t.Errorf("expected ParentText Parent text content!, got %s", hp.ParentText)

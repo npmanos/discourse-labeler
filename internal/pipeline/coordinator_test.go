@@ -34,6 +34,7 @@ func (m *mockHydrator) Hydrate(ctx context.Context, ev *RawEvent) (*HydratedPost
 		TargetDID:   ev.Did,
 		TargetRKey:  ev.Commit.RKey,
 		TargetURI:   "at://" + ev.Did + "/" + ev.Commit.Collection + "/" + ev.Commit.RKey,
+		TargetCID:   ev.Commit.CID,
 		EventTimeUS: ev.TimeUS,
 	}, nil
 }
@@ -235,6 +236,7 @@ func TestCoordinator_FilteringAndDeduplication(t *testing.T) {
 			return &HydratedPost{
 				TargetDID:   ev.Did,
 				TargetRKey:  ev.Commit.RKey,
+				TargetCID:   ev.Commit.CID,
 				EventTimeUS: ev.TimeUS,
 			}, nil
 		},
@@ -304,6 +306,7 @@ func TestCoordinator_HydrationRetry(t *testing.T) {
 			return &HydratedPost{
 				TargetDID:   ev.Did,
 				TargetRKey:  ev.Commit.RKey,
+				TargetCID:   ev.Commit.CID,
 				EventTimeUS: ev.TimeUS,
 			}, nil
 		},
@@ -511,6 +514,7 @@ func TestCoordinator_AtomicCursorUpdates(t *testing.T) {
 			return &HydratedPost{
 				TargetDID:   ev.Did,
 				TargetRKey:  ev.Commit.RKey,
+				TargetCID:   ev.Commit.CID,
 				EventTimeUS: ev.TimeUS,
 			}, nil
 		},
@@ -638,6 +642,7 @@ func TestCoordinator_CategoricalRouting(t *testing.T) {
 				TargetDID:   ev.Did,
 				TargetRKey:  ev.Commit.RKey,
 				TargetURI:   "at://" + ev.Did + "/" + ev.Commit.Collection + "/" + ev.Commit.RKey,
+				TargetCID:   ev.Commit.CID,
 				TargetText:  "Post " + ev.Commit.RKey,
 				EventTimeUS: ev.TimeUS,
 			}, nil

@@ -101,7 +101,7 @@ func (oc *OzoneClient) EmitLabel(ctx context.Context, result *types.Classificati
 		"subject": map[string]interface{}{
 			"$type": "com.atproto.repo.strongRef",
 			"uri":   result.Post.TargetURI,
-			"cid":   "", // Omit for general StrongRef parsing in Ozone
+			"cid":   result.Post.TargetCID,
 		},
 		"createdBy": oc.LabelerDID,
 	}
@@ -148,7 +148,7 @@ func (oc *OzoneClient) EmitEscalation(ctx context.Context, result *types.Classif
 		"subject": map[string]interface{}{
 			"$type": "com.atproto.repo.strongRef",
 			"uri":   result.Post.TargetURI,
-			"cid":   "", // Omit for general StrongRef parsing in Ozone
+			"cid":   result.Post.TargetCID,
 		},
 		"createdBy": oc.LabelerDID,
 	}

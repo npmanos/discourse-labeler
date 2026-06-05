@@ -60,6 +60,7 @@ func TestOzoneEmitLabelSuccess(t *testing.T) {
 	result := &types.ClassificationResult{
 		Post: &types.HydratedPost{
 			TargetURI: "at://did:plc:user/app.bsky.feed.post/123",
+			TargetCID: "bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua",
 		},
 		Probability: 0.90,
 		TargetPost: types.PostClassification{
@@ -83,6 +84,14 @@ func TestOzoneEmitLabelSuccess(t *testing.T) {
 	}
 	if capturedPassword != "secret-token" {
 		t.Errorf("expected basic auth password 'secret-token', got %s", capturedPassword)
+	}
+
+	subject, ok := capturedPayload["subject"].(map[string]interface{})
+	if !ok {
+		t.Fatal("expected payload to contain a subject object")
+	}
+	if subject["cid"] != "bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua" {
+		t.Errorf("expected subject cid bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua, got %v", subject["cid"])
 	}
 
 	event, ok := capturedPayload["event"].(map[string]interface{})
@@ -126,6 +135,7 @@ func TestOzoneEmitEscalationSuccess(t *testing.T) {
 	result := &types.ClassificationResult{
 		Post: &types.HydratedPost{
 			TargetURI: "at://did:plc:user/app.bsky.feed.post/123",
+			TargetCID: "bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua",
 		},
 		Probability: 0.82,
 		TargetPost: types.PostClassification{
@@ -160,6 +170,14 @@ func TestOzoneEmitEscalationSuccess(t *testing.T) {
 	}
 	if capturedPassword != "secret-token" {
 		t.Errorf("expected basic auth password 'secret-token', got %s", capturedPassword)
+	}
+
+	subject, ok := capturedPayload["subject"].(map[string]interface{})
+	if !ok {
+		t.Fatal("expected payload to contain a subject object")
+	}
+	if subject["cid"] != "bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua" {
+		t.Errorf("expected subject cid bafyreihunttf7a3uvtzrgbnyu2rzv24w4zx7xjwqgk4x5w7n5yvq7u7aua, got %v", subject["cid"])
 	}
 
 	event, ok := capturedPayload["event"].(map[string]interface{})

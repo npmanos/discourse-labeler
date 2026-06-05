@@ -39,6 +39,7 @@ type JetstreamCommit struct {
 	Collection string          `json:"collection"` // e.g. "app.bsky.feed.post"
 	RKey       string          `json:"rkey"`
 	Record     json.RawMessage `json:"record,omitempty"`
+	CID        string          `json:"cid,omitempty"`
 }
 
 // UnmarshalJSON custom unmarshals JetstreamCommit supporting both "type" and "operation" fields.
@@ -50,6 +51,7 @@ func (jc *JetstreamCommit) UnmarshalJSON(data []byte) error {
 		Collection string          `json:"collection"`
 		RKey       string          `json:"rkey"`
 		Record     json.RawMessage `json:"record,omitempty"`
+		CID        string          `json:"cid,omitempty"`
 	}
 	var aux JetstreamCommitAlias
 	if err := json.Unmarshal(data, &aux); err != nil {
@@ -63,6 +65,7 @@ func (jc *JetstreamCommit) UnmarshalJSON(data []byte) error {
 	jc.Collection = aux.Collection
 	jc.RKey = aux.RKey
 	jc.Record = aux.Record
+	jc.CID = aux.CID
 	return nil
 }
 
@@ -94,6 +97,7 @@ type HydratedPost struct {
 	TargetDID        string
 	TargetRKey       string
 	TargetURI        string
+	TargetCID        string
 	TargetText       string
 	ParentText       string
 	QuotedText       string
