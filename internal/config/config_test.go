@@ -135,3 +135,43 @@ func TestConfigLoadSystemPromptOverrideError(t *testing.T) {
 		t.Errorf("expected nil config on error, got %+v", cfg)
 	}
 }
+
+func TestLoadEnvFile(t *testing.T) {
+	clearEnv(t)
+
+	// Create a temporary .env file
+	tmpDir := t.TempDir()
+	envPath := tmpDir + "/.env"
+	content := `
+# This is a comment
+PORT=9091
+LLM_MODEL="custom-model-from-env"
+LLM_API_KEY='single-quoted-key'
+OZONE_ADMIN_TOKEN=some-token
+`
+	if err := os.WriteFile(envPath, []byte(content), 0644); err != nil {
+		t.Fatalf("failed to write temp env file: %v", err)
+	}
+
+	if err := loadEnvFile(envPath); err != nil {
+		t.Fatalf("failed to load env file: %v", err)
+	}
+
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("failed to load config: %v", err)
+	}
+
+	if cfg.Port != "9091" {
+		t.Errorf("expected Port 9091, got %s", cfg.Port)
+	}
+	if cfg.LLMModel != "custom-model-from-env" {
+		t.Errorf("expected LLMModel custom-model-from-env, got %s", cfg.LLMModel)
+	}
+	if cfg.LLMAPIKey != "single-quoted-key" {
+		t.Errorf("expected LLMAPIKey single-quoted-key, got %s", cfg.LLMAPIKey)
+	}
+	if cfg.OzoneAdminToken != "some-token" {
+		t.Errorf("expected OzoneAdminToken some-token, got %s", cfg.OzoneAdminToken)
+	}
+}

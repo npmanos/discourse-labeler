@@ -83,6 +83,7 @@ func NewLLMClassifier(endpoint, model string, opts ...LLMClassifierOption) *LLMC
 	client := openai.NewClient(
 		option.WithBaseURL(endpoint),
 		option.WithAPIKey(lc.APIKey),
+		option.WithHeader("User-Agent", "discourse-labeler/1.0"),
 	)
 	lc.Client = &client
 
