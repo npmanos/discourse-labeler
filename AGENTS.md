@@ -65,7 +65,7 @@ git flow <branch-type> start <topic-name>
 
 ### 2. Synchronization Requirement: Local Commits & Push Approval
 
-All AI agents and collaborators must commit their changes locally. You **MUST NOT push your commits** to the remote origin until a human has reviewed the changes and explicitly approved pushing.
+All AI agents and collaborators must commit their changes locally. You **MUST NOT push your commits** to the remote origin until a human has reviewed the changes and explicitly approved pushing. (Note: A user giving you permission to finish a topic branch **IS** explicit permission to push `develop`).
 
 When committing your work:
 1. Write clear, structured commit messages adhering to standard conventions (e.g. Conventional Commits: `feat: add ...`, `fix: resolve ...`).
@@ -114,5 +114,5 @@ Personal user instructions are contained in `AGENTS.local.md` and those instruct
 - [Design Specs](docs/superpowers/specs/)
 - [Implementation Plans](docs/superpowers/plans/)
 
-<!-- Last updated: June 2026 to adopt git flow commands, define topic branches, and include local overrides -->
+<!-- Last updated: June 2026 to adopt git flow commands, define topic branches, include local overrides, and clarify develop push permission -->
 
