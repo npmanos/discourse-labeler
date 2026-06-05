@@ -139,4 +139,8 @@ go.work
 /bin/
 /data/
 
+# Local agent configuration overrides
+AGENTS.local.md
+
+
 
