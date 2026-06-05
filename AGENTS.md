@@ -63,21 +63,22 @@ git pull origin develop
 git flow <branch-type> start <topic-name>
 ```
 
-### 2. Synchronization Requirement: Push All Changes
+### 2. Synchronization Requirement: Local Commits & Push Approval
 
-All AI agents and collaborators **must push their commits** to the remote origin. This guarantees that your changes are backed up, visible to peers, and integrated into CI/CD pipelines.
+All AI agents and collaborators must commit their changes locally. You **MUST NOT push your commits** to the remote origin until a human has reviewed the changes and explicitly approved pushing.
 
 When committing your work:
 1. Write clear, structured commit messages adhering to standard conventions (e.g. Conventional Commits: `feat: add ...`, `fix: resolve ...`).
 2. Run your verification tests locally first.
-3. Push your branch to the remote repository:
+3. Commit locally and request human review. Do **NOT** push until approved.
+4. Once approved, push your branch to the remote repository:
 
 ```bash
 # Stage and commit your changes
 git add .
 git commit -m "feat: implement feature xyz"
 
-# Publish the topic branch to the remote origin using git flow
+# Obtain human review and push approval. Once approved, publish/push:
 git flow <branch-type> publish
 ```
 
