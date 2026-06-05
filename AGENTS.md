@@ -114,5 +114,5 @@ Personal user instructions are contained in `AGENTS.local.md` and those instruct
 - [Design Specs](docs/superpowers/specs/)
 - [Implementation Plans](docs/superpowers/plans/)
 
-<!-- Last updated: June 2026 to adopt git flow commands, update manifests, define topic branches, include local overrides, and clarify develop push permission -->
+<!-- Last updated: June 2026 to adopt git flow commands, update manifests, define topic branches, include local overrides, clarify develop push permission, and resolve release-please version bumping -->
 
