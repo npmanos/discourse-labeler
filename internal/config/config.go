@@ -17,6 +17,7 @@ type Config struct {
 	SlingshotURL          string
 	LLMEndpoint           string
 	LLMModel              string
+	LLMAPIKey             string
 	LLMTemperature        float64
 	OzoneEndpoint         string
 	LabelerDID            string
@@ -43,6 +44,7 @@ func Load() (*Config, error) {
 		SlingshotURL:          getEnv("SLINGSHOT_URL", "https://slingshot.microcosm.blue"),
 		LLMEndpoint:           getEnv("LLM_ENDPOINT", "http://localhost:8080/v1/"),
 		LLMModel:              getEnv("LLM_MODEL", "google/gemma-4-e2b-gguf"),
+		LLMAPIKey:             getEnv("LLM_API_KEY", ""),
 		LLMTemperature:        getEnvFloat("LLM_TEMPERATURE", 0.0),
 		OzoneEndpoint:         getEnv("OZONE_ENDPOINT", "http://localhost:3000"),
 		LabelerDID:            getEnv("LABELER_DID", ""),

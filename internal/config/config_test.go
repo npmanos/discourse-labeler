@@ -9,7 +9,7 @@ func clearEnv(t *testing.T) {
 	vars := []string{
 		"PORT", "LOG_LEVEL", "CURSOR_FILE_PATH", "CURSOR_REWIND_SECONDS",
 		"HYDRATION_WORKERS", "CLASSIFICATION_WORKERS", "GRAZE_FEED_URI",
-		"CONTRAILS_WS_URL", "SLINGSHOT_URL", "LLM_ENDPOINT", "LLM_MODEL",
+		"CONTRAILS_WS_URL", "SLINGSHOT_URL", "LLM_ENDPOINT", "LLM_MODEL", "LLM_API_KEY",
 		"LLM_TEMPERATURE", "OZONE_ENDPOINT", "LABELER_DID", "OZONE_ADMIN_TOKEN",
 		"DRY_RUN", "LLM_SYSTEM_PROMPT", "LLM_SYSTEM_PROMPT_PATH",
 	}
@@ -35,12 +35,16 @@ func TestConfigLoadDefaults(t *testing.T) {
 	if cfg.DryRun != false {
 		t.Errorf("expected default DryRun false, got %t", cfg.DryRun)
 	}
+	if cfg.LLMAPIKey != "" {
+		t.Errorf("expected default LLMAPIKey to be empty, got %s", cfg.LLMAPIKey)
+	}
 }
 
 func TestConfigLoadEnvOverrides(t *testing.T) {
 	t.Setenv("PORT", "9090")
 	t.Setenv("DRY_RUN", "true")
 	t.Setenv("CURSOR_REWIND_SECONDS", "30")
+	t.Setenv("LLM_API_KEY", "override-key")
 
 	cfg, err := Load()
 	if err != nil {
@@ -54,6 +58,9 @@ func TestConfigLoadEnvOverrides(t *testing.T) {
 	}
 	if cfg.CursorRewindSeconds != 30 {
 		t.Errorf("expected CursorRewindSeconds 30, got %d", cfg.CursorRewindSeconds)
+	}
+	if cfg.LLMAPIKey != "override-key" {
+		t.Errorf("expected LLMAPIKey override-key, got %s", cfg.LLMAPIKey)
 	}
 }
 

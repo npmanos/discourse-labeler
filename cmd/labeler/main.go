@@ -31,7 +31,7 @@ func main() {
 	// 1. Initialize Attached Resources/Adapters
 	ingester := services.NewContrailsIngester(cfg.ContrailsWSURL, cfg.GrazeFeedURI)
 	hydrator := services.NewSlingshotHydrator(cfg.SlingshotURL)
-	classifier := services.NewLLMClassifier(cfg.LLMEndpoint, cfg.LLMModel, services.WithSystemPrompt(cfg.LLMSystemPrompt))
+	classifier := services.NewLLMClassifier(cfg.LLMEndpoint, cfg.LLMModel, services.WithSystemPrompt(cfg.LLMSystemPrompt), services.WithAPIKey(cfg.LLMAPIKey))
 	ozoneClient := services.NewOzoneClient(cfg.OzoneEndpoint, cfg.OzoneAdminToken, cfg.LabelerDID)
 	cursor := types.NewCursorTracker(cfg.CursorFilePath)
 

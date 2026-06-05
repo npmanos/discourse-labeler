@@ -52,6 +52,7 @@ type LLMClassifier struct {
 	Client       *openai.Client
 	Model        string
 	SystemPrompt string
+	APIKey       string
 }
 
 type LLMClassifierOption func(*LLMClassifier)
@@ -62,18 +63,29 @@ func WithSystemPrompt(prompt string) LLMClassifierOption {
 	}
 }
 
+func WithAPIKey(apiKey string) LLMClassifierOption {
+	return func(lc *LLMClassifier) {
+		if apiKey != "" {
+			lc.APIKey = apiKey
+		}
+	}
+}
+
 func NewLLMClassifier(endpoint, model string, opts ...LLMClassifierOption) *LLMClassifier {
-	client := openai.NewClient(
-		option.WithBaseURL(endpoint),
-		option.WithAPIKey("local-llama-nopass"),
-	)
 	lc := &LLMClassifier{
-		Client: &client,
 		Model:  model,
+		APIKey: "local-llama-nopass",
 	}
 	for _, opt := range opts {
 		opt(lc)
 	}
+
+	client := openai.NewClient(
+		option.WithBaseURL(endpoint),
+		option.WithAPIKey(lc.APIKey),
+	)
+	lc.Client = &client
+
 	return lc
 }
 

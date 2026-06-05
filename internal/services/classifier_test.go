@@ -269,3 +269,46 @@ func TestLLMClassifierParentAndQuoted(t *testing.T) {
 		t.Errorf("expected quote post classification likely_meta, got: %+v", res.ContextAnalysis.QuotePost)
 	}
 }
+
+func TestLLMClassifierWithAPIKey(t *testing.T) {
+	expectedAPIKey := "test-custom-api-key-123"
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		auth := r.Header.Get("Authorization")
+		expectedAuth := "Bearer " + expectedAPIKey
+		if auth != expectedAuth {
+			t.Errorf("expected Authorization header %q, got %q", expectedAuth, auth)
+		}
+
+		response := map[string]interface{}{
+			"choices": []map[string]interface{}{
+				{
+					"message": map[string]string{
+						"content": `{
+							"context_analysis": {
+								"parent_post": null,
+								"quote_post": null
+							},
+							"target_post": {
+								"reasoning": "some reasoning",
+								"classification": "not_meta"
+							}
+						}`,
+					},
+				},
+			},
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	classifier := NewLLMClassifier(server.URL+"/v1/", "test-model", WithAPIKey(expectedAPIKey))
+	hp := &types.HydratedPost{
+		TargetText: "test post content",
+	}
+
+	_, err := classifier.Classify(context.Background(), hp)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}

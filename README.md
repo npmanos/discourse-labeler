@@ -70,6 +70,7 @@ The daemon is configured entirely through environment variables or a `.env` file
 | `SLINGSHOT_URL` | `https://slingshot.microcosm.blue` | Microcosm Slingshot edge cache RPC endpoint. |
 | `LLM_ENDPOINT` | `http://localhost:8080/v1/` | Base URL of OpenAI-compatible inference server. |
 | `LLM_MODEL` | `google/gemma-4-e2b-gguf` | LLM model identifier. |
+| `LLM_API_KEY` | *(Empty)* | Optional API key for OpenAI-compatible endpoint (defaults to `local-llama-nopass` if omitted). |
 | `LLM_TEMPERATURE` | `0.0` | Sampling temperature for classification (keep at `0.0` for determinism). |
 | `OZONE_ENDPOINT` | `http://localhost:3000` | Target Ozone moderation server API endpoint. |
 | `LABELER_DID` | *Required* | Cryptographic DID of the network labeler service. |
