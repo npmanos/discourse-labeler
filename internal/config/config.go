@@ -1,10 +1,10 @@
 package config
 
 import (
-	"bufio"
 	"os"
 	"strconv"
-	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -116,37 +116,10 @@ func loadSystemPrompt(promptEnv, promptPathEnv string) (string, error) {
 	}
 	return "", nil
 }
-
 func loadEnvFile(path string) error {
-	file, err := os.Open(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil
-		}
+	err := godotenv.Load(path)
+	if err != nil && !os.IsNotExist(err) {
 		return err
 	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) != 2 {
-			continue
-		}
-		key := strings.TrimSpace(parts[0])
-		val := strings.TrimSpace(parts[1])
-
-		if len(val) >= 2 && ((val[0] == '"' && val[len(val)-1] == '"') || (val[0] == '\'' && val[len(val)-1] == '\'')) {
-			val = val[1 : len(val)-1]
-		}
-
-		if _, exists := os.LookupEnv(key); !exists {
-			os.Setenv(key, val)
-		}
-	}
-	return scanner.Err()
+	return nil
 }
