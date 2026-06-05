@@ -118,7 +118,7 @@ func (oc *OzoneClient) EmitLabel(ctx context.Context, result *types.Classificati
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", oc.AdminToken))
+	req.SetBasicAuth("admin", oc.AdminToken)
 
 	resp, err := oc.HTTPClient.Do(req)
 	if err != nil {
@@ -165,7 +165,7 @@ func (oc *OzoneClient) EmitEscalation(ctx context.Context, result *types.Classif
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", oc.AdminToken))
+	req.SetBasicAuth("admin", oc.AdminToken)
 
 	resp, err := oc.HTTPClient.Do(req)
 	if err != nil {

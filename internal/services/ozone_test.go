@@ -41,12 +41,14 @@ func TestOzoneIsAlreadyLabeledTrue(t *testing.T) {
 
 func TestOzoneEmitLabelSuccess(t *testing.T) {
 	var capturedMethod string
-	var capturedAuth string
+	var capturedUser string
+	var capturedPassword string
+	var capturedAuthOk bool
 	var capturedPayload map[string]interface{}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		capturedMethod = r.Method
-		capturedAuth = r.Header.Get("Authorization")
+		capturedUser, capturedPassword, capturedAuthOk = r.BasicAuth()
 		if r.Method == "POST" {
 			_ = json.NewDecoder(r.Body).Decode(&capturedPayload)
 		}
@@ -73,8 +75,14 @@ func TestOzoneEmitLabelSuccess(t *testing.T) {
 	if capturedMethod != "POST" {
 		t.Errorf("expected POST, got %s", capturedMethod)
 	}
-	if capturedAuth != "Bearer secret-token" {
-		t.Errorf("expected Bearer secret-token, got %s", capturedAuth)
+	if !capturedAuthOk {
+		t.Error("expected basic auth header to be present")
+	}
+	if capturedUser != "admin" {
+		t.Errorf("expected basic auth user 'admin', got %s", capturedUser)
+	}
+	if capturedPassword != "secret-token" {
+		t.Errorf("expected basic auth password 'secret-token', got %s", capturedPassword)
 	}
 
 	event, ok := capturedPayload["event"].(map[string]interface{})
@@ -98,12 +106,14 @@ func TestOzoneEmitLabelSuccess(t *testing.T) {
 
 func TestOzoneEmitEscalationSuccess(t *testing.T) {
 	var capturedMethod string
-	var capturedAuth string
+	var capturedUser string
+	var capturedPassword string
+	var capturedAuthOk bool
 	var capturedPayload map[string]interface{}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		capturedMethod = r.Method
-		capturedAuth = r.Header.Get("Authorization")
+		capturedUser, capturedPassword, capturedAuthOk = r.BasicAuth()
 		if r.Method == "POST" {
 			_ = json.NewDecoder(r.Body).Decode(&capturedPayload)
 		}
@@ -142,8 +152,14 @@ func TestOzoneEmitEscalationSuccess(t *testing.T) {
 	if capturedMethod != "POST" {
 		t.Errorf("expected POST, got %s", capturedMethod)
 	}
-	if capturedAuth != "Bearer secret-token" {
-		t.Errorf("expected Bearer secret-token, got %s", capturedAuth)
+	if !capturedAuthOk {
+		t.Error("expected basic auth header to be present")
+	}
+	if capturedUser != "admin" {
+		t.Errorf("expected basic auth user 'admin', got %s", capturedUser)
+	}
+	if capturedPassword != "secret-token" {
+		t.Errorf("expected basic auth password 'secret-token', got %s", capturedPassword)
 	}
 
 	event, ok := capturedPayload["event"].(map[string]interface{})
