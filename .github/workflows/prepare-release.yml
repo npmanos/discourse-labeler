@@ -41,13 +41,32 @@ jobs:
           fi
 
       - name: Create Release Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          branch: "release/v${{ steps.changelog.outputs.version }}"
-          base: main
-          title: "chore: release v${{ steps.changelog.outputs.version }}"
-          body: |
-            This PR was automatically generated to prepare for release `v${{ steps.changelog.outputs.version }}`.
-            
-            ${{ steps.changelog.outputs.clean_changelog }}
-          commit-message: "chore: bump version and generate changelog for v${{ steps.changelog.outputs.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.changelog.outputs.version }}"
+          BRANCH="release/v$VERSION"
+          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git checkout -b "$BRANCH"
+          git add CHANGELOG.md VERSION internal/config/version.go
+          
+          if git diff --cached --quiet; then
+            echo "No version bump needed."
+            exit 0
+          fi
+          
+          git commit -m "chore: bump version and generate changelog for v$VERSION"
+          git push -f origin "$BRANCH"
+          
+          PR_EXISTS=$(gh pr list --head "$BRANCH" --base main --state open --json number | jq '. | length')
+          
+          if [ "$PR_EXISTS" -eq "0" ]; then
+            gh pr create --base main --head "$BRANCH" \
+              --title "chore: release v$VERSION" \
+              --body "This PR was automatically generated to prepare for release \`v$VERSION\`.
+
+          ${{ steps.changelog.outputs.clean_changelog }}"
+          fi
