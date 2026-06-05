@@ -59,8 +59,8 @@ Before starting a new task, always pull the latest changes from `develop` and cr
 git checkout develop
 git pull origin develop
 
-# Create your dedicated topic branch using git flow
-git flow <branch-type> start your-branch-name
+# Create your dedicated topic branch using git flow (do NOT include the prefix, e.g. use "my-feature" NOT "feature/my-feature")
+git flow <branch-type> start <topic-name>
 ```
 
 ### 2. Synchronization Requirement: Push All Changes
