@@ -1,0 +1,56 @@
+name: Finish Release
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  finish-release:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Determine Version
+        id: version
+        run: |
+          # Extract version from branch name: release/v0.1.0 -> 0.1.0
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          VERSION="${BRANCH_NAME#release/v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ steps.version.outputs.version }}"
+          name: "v${{ steps.version.outputs.version }}"
+          body: ${{ github.event.pull_request.body }}
+          generate_release_notes: false
+
+      - name: Automated Sync-Back to develop
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Fetch develop
+          git fetch origin develop
+          
+          # Switch to develop
+          git checkout develop
+          
+          # Merge main back into develop to keep changelog/version in sync
+          git merge --no-ff -m "chore: merge release v${{ steps.version.outputs.version }} back into develop [skip ci]" origin/main
+          
+          # Push changes back to origin
+          git push origin develop

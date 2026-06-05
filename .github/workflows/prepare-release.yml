@@ -1,0 +1,72 @@
+name: Prepare Release
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: develop
+
+      - name: Generate Changelog and Version Bump
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          git-branch: develop
+          skip-commit: true
+          skip-tag: true
+          output-file: 'CHANGELOG.md'
+          version-file: 'VERSION'
+          fallback-version: '0.1.0'
+
+      - name: Sync Go Version File
+        run: |
+          # Sync the computed version into the Go binary config
+          # $VERSION contains the new version without the v prefix
+          VERSION="${{ steps.changelog.outputs.version }}"
+          if [ -n "$VERSION" ]; then
+            sed -i "s/Version = \".*\"/Version = \"$VERSION\"/" internal/config/version.go
+          fi
+
+      - name: Create Release Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.changelog.outputs.version }}"
+          BRANCH="release/v$VERSION"
+          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git checkout -b "$BRANCH"
+          git add CHANGELOG.md VERSION internal/config/version.go
+          
+          if git diff --cached --quiet; then
+            echo "No version bump needed."
+            exit 0
+          fi
+          
+          git commit -m "chore: bump version and generate changelog for v$VERSION"
+          git push -f origin "$BRANCH"
+          
+          PR_EXISTS=$(gh pr list --head "$BRANCH" --base main --state open --json number | jq '. | length')
+          
+          if [ "$PR_EXISTS" -eq "0" ]; then
+            gh pr create --base main --head "$BRANCH" \
+              --title "chore: release v$VERSION" \
+              --body "This PR was automatically generated to prepare for release \`v$VERSION\`.
+
+          ${{ steps.changelog.outputs.clean_changelog }}"
+          fi

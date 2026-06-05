@@ -1,0 +1,322 @@
+release-please	Set up job	﻿2026-06-05T04:37:34.2075841Z Current runner version: '2.334.0'
+release-please	Set up job	2026-06-05T04:37:34.2102424Z ##[group]Runner Image Provisioner
+release-please	Set up job	2026-06-05T04:37:34.2103323Z Hosted Compute Agent
+release-please	Set up job	2026-06-05T04:37:34.2103921Z Version: 20260520.533
+release-please	Set up job	2026-06-05T04:37:34.2104632Z Commit: 189110e25284a9812c124fd27b339e2fb4f2f9db
+release-please	Set up job	2026-06-05T04:37:34.2105415Z Build Date: 2026-05-20T17:44:04Z
+release-please	Set up job	2026-06-05T04:37:34.2106082Z Worker ID: {51677f2c-b335-469b-9965-1dd3a5ac7436}
+release-please	Set up job	2026-06-05T04:37:34.2106869Z Azure Region: westcentralus
+release-please	Set up job	2026-06-05T04:37:34.2107513Z ##[endgroup]
+release-please	Set up job	2026-06-05T04:37:34.2109528Z ##[group]Operating System
+release-please	Set up job	2026-06-05T04:37:34.2110266Z Ubuntu
+release-please	Set up job	2026-06-05T04:37:34.2110799Z 24.04.4
+release-please	Set up job	2026-06-05T04:37:34.2111395Z LTS
+release-please	Set up job	2026-06-05T04:37:34.2111912Z ##[endgroup]
+release-please	Set up job	2026-06-05T04:37:34.2112502Z ##[group]Runner Image
+release-please	Set up job	2026-06-05T04:37:34.2113146Z Image: ubuntu-24.04
+release-please	Set up job	2026-06-05T04:37:34.2113724Z Version: 20260525.161.1
+release-please	Set up job	2026-06-05T04:37:34.2114834Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260525.161/images/ubuntu/Ubuntu2404-Readme.md
+release-please	Set up job	2026-06-05T04:37:34.2116576Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260525.161
+release-please	Set up job	2026-06-05T04:37:34.2117601Z ##[endgroup]
+release-please	Set up job	2026-06-05T04:37:34.2119031Z ##[group]GITHUB_TOKEN Permissions
+release-please	Set up job	2026-06-05T04:37:34.2121020Z Contents: write
+release-please	Set up job	2026-06-05T04:37:34.2121659Z Metadata: read
+release-please	Set up job	2026-06-05T04:37:34.2122393Z PullRequests: write
+release-please	Set up job	2026-06-05T04:37:34.2122995Z ##[endgroup]
+release-please	Set up job	2026-06-05T04:37:34.2125092Z Secret source: Actions
+release-please	Set up job	2026-06-05T04:37:34.2126024Z Prepare workflow directory
+release-please	Set up job	2026-06-05T04:37:34.2476439Z Prepare all required actions
+release-please	Set up job	2026-06-05T04:37:34.2515247Z Getting action download info
+release-please	Set up job	2026-06-05T04:37:34.7045263Z Download action repository 'googleapis/release-please-action@v4' (SHA:5c625bfb5d1ff62eadeeb3772007f7f66fdcf071)
+release-please	Set up job	2026-06-05T04:37:35.4992850Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+release-please	Set up job	2026-06-05T04:37:35.6594230Z Complete job name: release-please
+release-please	Run Release Please	﻿2026-06-05T04:37:35.7483272Z ##[group]Run googleapis/release-please-action@v4
+release-please	Run Release Please	2026-06-05T04:37:35.7485056Z with:
+release-please	Run Release Please	2026-06-05T04:37:35.7486035Z   config-file: release-please-config.json
+release-please	Run Release Please	2026-06-05T04:37:35.7487391Z   manifest-file: .release-please-manifest.json
+release-please	Run Release Please	2026-06-05T04:37:35.7488896Z   target-branch: main
+release-please	Run Release Please	2026-06-05T04:37:35.7499195Z   token: ***
+release-please	Run Release Please	2026-06-05T04:37:35.7500146Z   repo-url: npmanos/discourse-labeler
+release-please	Run Release Please	2026-06-05T04:37:35.7501396Z   github-api-url: https://api.github.com
+release-please	Run Release Please	2026-06-05T04:37:35.7502767Z   github-graphql-url: https://api.github.com/graphql
+release-please	Run Release Please	2026-06-05T04:37:35.7504068Z   fork: false
+release-please	Run Release Please	2026-06-05T04:37:35.7504993Z   include-component-in-tag: false
+release-please	Run Release Please	2026-06-05T04:37:35.7506115Z   skip-github-release: false
+release-please	Run Release Please	2026-06-05T04:37:35.7507228Z   skip-github-pull-request: false
+release-please	Run Release Please	2026-06-05T04:37:35.7508530Z   skip-labeling: false
+release-please	Run Release Please	2026-06-05T04:37:35.7509580Z   changelog-host: https://github.com
+release-please	Run Release Please	2026-06-05T04:37:35.7510743Z   versioning-strategy: default
+release-please	Run Release Please	2026-06-05T04:37:35.7512097Z ##[endgroup]
+release-please	Run Release Please	2026-06-05T04:37:35.9565060Z Running release-please version: 17.3.0
+release-please	Run Release Please	2026-06-05T04:37:35.9587604Z ❯ Fetching release-please-config.json from branch main
+release-please	Run Release Please	2026-06-05T04:37:35.9589776Z ❯ Fetching .release-please-manifest.json from branch main
+release-please	Run Release Please	2026-06-05T04:37:36.5336055Z ✔ Building releases
+release-please	Run Release Please	2026-06-05T04:37:36.5338922Z ✔ Building strategies by path
+release-please	Run Release Please	2026-06-05T04:37:36.5341393Z ❯ .: go
+release-please	Run Release Please	2026-06-05T04:37:36.7394925Z ❯ Fetching release-please-config.json from branch main
+release-please	Run Release Please	2026-06-05T04:37:36.7397825Z ❯ Fetching .release-please-manifest.json from branch main
+release-please	Run Release Please	2026-06-05T04:37:36.7401760Z ✔ Building pull requests
+release-please	Run Release Please	2026-06-05T04:37:36.7409709Z ✔ Building strategies by path
+release-please	Run Release Please	2026-06-05T04:37:36.7429520Z ❯ .: go
+release-please	Run Release Please	2026-06-05T04:37:36.7440228Z ✔ Collecting release commit SHAs
+release-please	Run Release Please	2026-06-05T04:37:36.7442339Z ❯ release search depth: 400
+release-please	Run Release Please	2026-06-05T04:37:36.7444171Z ❯ Fetching releases with cursor undefined
+release-please	Run Release Please	2026-06-05T04:37:36.9516241Z ⚠ Could not find releases.
+release-please	Run Release Please	2026-06-05T04:37:36.9517847Z ⚠ Expected 1 releases, only found 0
+release-please	Run Release Please	2026-06-05T04:37:36.9519353Z ⚠ Missing 1 paths: .
+release-please	Run Release Please	2026-06-05T04:37:37.1759781Z ⚠ Expected 1 releases, only found 0
+release-please	Run Release Please	2026-06-05T04:37:37.1760797Z ❯ looking for tagName: v0.0.0
+release-please	Run Release Please	2026-06-05T04:37:37.1761467Z ✔ Collecting commits since all latest releases
+release-please	Run Release Please	2026-06-05T04:37:37.1761940Z ❯ commit search depth: 500
+release-please	Run Release Please	2026-06-05T04:37:37.1762253Z ❯ Set(0) {}
+release-please	Run Release Please	2026-06-05T04:37:37.1762662Z ❯ Fetching merge commits on branch main with cursor: undefined
+release-please	Run Release Please	2026-06-05T04:37:37.4845967Z ❯ Backfilling file list for commit: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d
+release-please	Run Release Please	2026-06-05T04:37:37.8211148Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:37.8212387Z ❯ Backfilling file list for commit: 0baf8b4ef831df51b768a873b408d2f585b92c45
+release-please	Run Release Please	2026-06-05T04:37:38.0629344Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:38.0630136Z ❯ Backfilling file list for commit: 7a158fd8154936f62a855120ec6105f6e13122f6
+release-please	Run Release Please	2026-06-05T04:37:38.2873429Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:38.2874713Z ❯ Backfilling file list for commit: f6b79593ba92f375029604b80ec5d5cc9c0ce2e3
+release-please	Run Release Please	2026-06-05T04:37:38.5201350Z ❯ Found 0 files
+release-please	Run Release Please	2026-06-05T04:37:38.5203212Z ❯ Backfilling file list for commit: 20b2fba46ea149cb4f4f87d46aa59e3fa7682f7e
+release-please	Run Release Please	2026-06-05T04:37:38.7420541Z ❯ Found 6 files
+release-please	Run Release Please	2026-06-05T04:37:38.7421513Z ❯ Backfilling file list for commit: bd2e30a74f494ba240c0763de6b5408842140150
+release-please	Run Release Please	2026-06-05T04:37:38.9609737Z ❯ Found 3 files
+release-please	Run Release Please	2026-06-05T04:37:38.9610653Z ❯ Backfilling file list for commit: 466f33e288f2016a46e1e5b92898fbb86f111d56
+release-please	Run Release Please	2026-06-05T04:37:39.2039012Z ❯ Found 3 files
+release-please	Run Release Please	2026-06-05T04:37:39.2040091Z ❯ Backfilling file list for commit: bda3e4d0b77715dc5686d960fd2e7ae0d6ce1ce7
+release-please	Run Release Please	2026-06-05T04:37:39.4443816Z ❯ Found 7 files
+release-please	Run Release Please	2026-06-05T04:37:39.4445106Z ❯ Backfilling file list for commit: 7bca4c7ba19ba616a75852744caaee6521835668
+release-please	Run Release Please	2026-06-05T04:37:39.6689847Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:39.6690659Z ❯ Backfilling file list for commit: 1b3531e80d61c1896964bf2a8cc45f2d601a2a6a
+release-please	Run Release Please	2026-06-05T04:37:39.8952579Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:39.8953467Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 9
+release-please	Run Release Please	2026-06-05T04:37:40.2074401Z ❯ Backfilling file list for commit: 1ecdbaac7792c42ff2f796cedf43346cbd27e46b
+release-please	Run Release Please	2026-06-05T04:37:40.4269578Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:40.4270396Z ❯ Backfilling file list for commit: 10d23f6f007975196f238ee775dbc190f38230e6
+release-please	Run Release Please	2026-06-05T04:37:40.6436929Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:40.6437821Z ❯ Backfilling file list for commit: 463d271965639751ff06fe9e03d7fec826e9a78b
+release-please	Run Release Please	2026-06-05T04:37:40.8740802Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:40.8741569Z ❯ Backfilling file list for commit: d8d616475159485526c836e9a1b92d02bbea6c47
+release-please	Run Release Please	2026-06-05T04:37:41.1049487Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:41.1050521Z ❯ Backfilling file list for commit: 67f3baf07e869cab7fc7b37b41cb1593f4bb21a7
+release-please	Run Release Please	2026-06-05T04:37:41.3338266Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:41.3339928Z ❯ Backfilling file list for commit: 26709065b3ad349835c7d9acdf6a9f72b294581b
+release-please	Run Release Please	2026-06-05T04:37:41.5598293Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:41.5599213Z ❯ Backfilling file list for commit: 5c374ca5fd8c1e3405264b68191c56e558b058e6
+release-please	Run Release Please	2026-06-05T04:37:41.8275989Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:41.8276882Z ❯ Backfilling file list for commit: 9b9f702e568572975b6a70dd4150d6d64607d852
+release-please	Run Release Please	2026-06-05T04:37:42.0817896Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:42.0818979Z ❯ Backfilling file list for commit: d97b84b40fc6a5fb6df89cc5daadb929f06fa19e
+release-please	Run Release Please	2026-06-05T04:37:42.3193269Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:42.3194151Z ❯ Backfilling file list for commit: 5fd9380f9d58b7a1aab027a9a2ebec0ed4815cdc
+release-please	Run Release Please	2026-06-05T04:37:42.6415893Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:42.6416604Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 19
+release-please	Run Release Please	2026-06-05T04:37:42.9629786Z ❯ Backfilling file list for commit: 0512fb4685e4a1886e2c3948c37e0eb3c469387a
+release-please	Run Release Please	2026-06-05T04:37:43.3133978Z ❯ Found 9 files
+release-please	Run Release Please	2026-06-05T04:37:43.3134778Z ❯ Backfilling file list for commit: 9a577931a964e725cd3e11bc952a86591542aaaf
+release-please	Run Release Please	2026-06-05T04:37:43.5983154Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:43.5983662Z ❯ Backfilling file list for commit: 8d36a24a098f1eb4381626fa3bbd31b772aba894
+release-please	Run Release Please	2026-06-05T04:37:43.8914203Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:43.8915483Z ❯ Backfilling file list for commit: a159d05a08eb7a073c9836c6aae508a05a29a0ea
+release-please	Run Release Please	2026-06-05T04:37:44.1791140Z ❯ Found 4 files
+release-please	Run Release Please	2026-06-05T04:37:44.1791905Z ❯ Backfilling file list for commit: 65adff96ff8bdc4b022464eafa242cc8a21e487a
+release-please	Run Release Please	2026-06-05T04:37:44.4698130Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:44.4699265Z ❯ Backfilling file list for commit: 262bd6b0c12bace34050d10cb9df986bd04ec73c
+release-please	Run Release Please	2026-06-05T04:37:44.7626654Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:44.7627527Z ❯ Backfilling file list for commit: 0bba35b2fe12b4b0601263fcfd40f7249c75e204
+release-please	Run Release Please	2026-06-05T04:37:45.0474859Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:45.0475746Z ❯ Backfilling file list for commit: 88a0234d0e1438400f085f7a8c4df682ba823fcb
+release-please	Run Release Please	2026-06-05T04:37:45.3559024Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:45.3559867Z ❯ Backfilling file list for commit: e807b53a71b56cc140a63e75fb264445d000c261
+release-please	Run Release Please	2026-06-05T04:37:45.6373877Z ❯ Found 3 files
+release-please	Run Release Please	2026-06-05T04:37:45.6374820Z ❯ Backfilling file list for commit: 4c8e15eb291bec831e5fca5a9d58e568743c6a6e
+release-please	Run Release Please	2026-06-05T04:37:45.9158481Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:45.9159654Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 29
+release-please	Run Release Please	2026-06-05T04:37:46.2539205Z ❯ Backfilling file list for commit: c22ce32ac829035c96832b6b771b57ed410c277c
+release-please	Run Release Please	2026-06-05T04:37:46.5266189Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:46.5267140Z ❯ Backfilling file list for commit: 968868d04d5a7c820f50f35b91e081054ffbbe73
+release-please	Run Release Please	2026-06-05T04:37:46.8091505Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:46.8092430Z ❯ Backfilling file list for commit: 4e44d1222357c6aca69cb8cc73b67f4f0f33db4c
+release-please	Run Release Please	2026-06-05T04:37:47.1053368Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:47.1054170Z ❯ Backfilling file list for commit: 4adafc83833ca3c7f482ffb6e88572cee4a828bf
+release-please	Run Release Please	2026-06-05T04:37:47.4080873Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:47.4081667Z ❯ Backfilling file list for commit: 7e3ca39ab863a39f1db2c2e1f3a65a7cfaede2c2
+release-please	Run Release Please	2026-06-05T04:37:47.6804470Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:47.6805244Z ❯ Backfilling file list for commit: 901fb676c561c083b3a3c97a399f6707af4164c1
+release-please	Run Release Please	2026-06-05T04:37:47.9578764Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:47.9579420Z ❯ Backfilling file list for commit: 031255017b8eaaf91543d208b5d85987892cec43
+release-please	Run Release Please	2026-06-05T04:37:48.2894640Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:48.2895178Z ❯ Backfilling file list for commit: 2e64cd2f6ef118bdee2c09e1ff11ba57e1c59534
+release-please	Run Release Please	2026-06-05T04:37:48.5761589Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:48.5762193Z ❯ Backfilling file list for commit: 0de1c692c1b8dea3d44644e821ae3a6b62bf26b8
+release-please	Run Release Please	2026-06-05T04:37:48.8888084Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:48.8888992Z ❯ Backfilling file list for commit: 2d80666e7654d01902875a8a5efeced8637179ca
+release-please	Run Release Please	2026-06-05T04:37:49.1663917Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:49.1669859Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 39
+release-please	Run Release Please	2026-06-05T04:37:49.5141192Z ❯ Backfilling file list for commit: 6cd58b67278f93f147e0bff65571a0751e13bb0d
+release-please	Run Release Please	2026-06-05T04:37:49.7912565Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:49.7913108Z ❯ Backfilling file list for commit: 7c40a13ebd7f96e9dfa95c96bd56d55cbfcf69fa
+release-please	Run Release Please	2026-06-05T04:37:50.0769033Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:50.0769840Z ❯ Backfilling file list for commit: 16ccb550ddfc84ad099682805148b9f34fd0add6
+release-please	Run Release Please	2026-06-05T04:37:50.3031861Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:50.3032666Z ❯ Backfilling file list for commit: ac661b1b024f152bdf9ce9754dce8a69820111d9
+release-please	Run Release Please	2026-06-05T04:37:50.5591843Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:50.5592635Z ❯ Backfilling file list for commit: 37241e72078c35d4436315f11c770a48b741591f
+release-please	Run Release Please	2026-06-05T04:37:50.8015936Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:50.8016958Z ❯ Backfilling file list for commit: 4eeca24ed7b87bff71903feddf3b2204e799bdaf
+release-please	Run Release Please	2026-06-05T04:37:51.0227926Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:51.0229096Z ❯ Backfilling file list for commit: bbeba672157be9ad6bdbd6e69227252b303cca60
+release-please	Run Release Please	2026-06-05T04:37:51.2613760Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:51.2614583Z ❯ Backfilling file list for commit: c07260f706b619afdd1f90ec18896918507c46ed
+release-please	Run Release Please	2026-06-05T04:37:51.4901971Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:51.4902524Z ❯ Backfilling file list for commit: c4e5ab1dcb7b3f72f1cf2a015e191cdd7c852885
+release-please	Run Release Please	2026-06-05T04:37:51.7097718Z ❯ Found 10 files
+release-please	Run Release Please	2026-06-05T04:37:51.7098675Z ❯ Backfilling file list for commit: 0d61062a4ea167ee1214a8927d9a92923de60bac
+release-please	Run Release Please	2026-06-05T04:37:51.9275046Z ❯ Found 10 files
+release-please	Run Release Please	2026-06-05T04:37:51.9275663Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 49
+release-please	Run Release Please	2026-06-05T04:37:52.2228711Z ❯ Backfilling file list for commit: 1f57d4e6888ebfbe087617b1700d0fd7938fbec4
+release-please	Run Release Please	2026-06-05T04:37:52.4423872Z ❯ Found 7 files
+release-please	Run Release Please	2026-06-05T04:37:52.4424676Z ❯ Backfilling file list for commit: 114347c44335919349ecb9a28b284784e2a66ecb
+release-please	Run Release Please	2026-06-05T04:37:53.0244148Z ❯ Found 7 files
+release-please	Run Release Please	2026-06-05T04:37:53.0245004Z ❯ Backfilling file list for commit: cdae41d5af0f4f47aa46e4a577b71ce45272cf55
+release-please	Run Release Please	2026-06-05T04:37:53.2508589Z ❯ Found 3 files
+release-please	Run Release Please	2026-06-05T04:37:53.2509788Z ❯ Backfilling file list for commit: 40491b882401e7094f72d26aba17830fd418624a
+release-please	Run Release Please	2026-06-05T04:37:53.4685958Z ❯ Found 3 files
+release-please	Run Release Please	2026-06-05T04:37:53.4686816Z ❯ Backfilling file list for commit: 24c998a81a5a0200441065f5a0465d46bfc2b141
+release-please	Run Release Please	2026-06-05T04:37:53.7032083Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:53.7032897Z ❯ Backfilling file list for commit: d6479ca5795976943f496cf8e60319148da319ae
+release-please	Run Release Please	2026-06-05T04:37:53.9323269Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:53.9323905Z ❯ Backfilling file list for commit: 37b390c6cfef9eddfe70ecb74f2f1d9be41ed6a4
+release-please	Run Release Please	2026-06-05T04:37:54.1549438Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:54.1550353Z ❯ Backfilling file list for commit: 5bc0b5975d4b922a93cdb95c52ae5f97b1b4c492
+release-please	Run Release Please	2026-06-05T04:37:54.4064493Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:54.4065311Z ❯ Backfilling file list for commit: 957c097db1681eb58c47d0197e68a8efb24ab44c
+release-please	Run Release Please	2026-06-05T04:37:54.6459399Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:54.6460085Z ❯ Backfilling file list for commit: eb0b9b914b0bb1e61036be59bddd3244c3519021
+release-please	Run Release Please	2026-06-05T04:37:54.8626806Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:37:54.8627484Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 59
+release-please	Run Release Please	2026-06-05T04:37:55.1987216Z ❯ Backfilling file list for commit: 5dcbc9e123f75f9a7fad7f6eb31c81a672bbb659
+release-please	Run Release Please	2026-06-05T04:37:55.5334546Z ❯ Found 5 files
+release-please	Run Release Please	2026-06-05T04:37:55.5335068Z ❯ Backfilling file list for commit: ea91b6aee541192ccd7ee19007b887719a35fc35
+release-please	Run Release Please	2026-06-05T04:37:55.7681932Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:55.7682444Z ❯ Backfilling file list for commit: a11d8897f21d113422e3a15528800e5dbf3709a1
+release-please	Run Release Please	2026-06-05T04:37:55.9911844Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:55.9912507Z ❯ Backfilling file list for commit: 7baf4c166b7031b83778b67cc5a547f5b569b0f6
+release-please	Run Release Please	2026-06-05T04:37:56.2136507Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:56.2137038Z ❯ Backfilling file list for commit: 1d3ec755d19fc90e05eb8aeb13b08282e9733e6e
+release-please	Run Release Please	2026-06-05T04:37:56.4323914Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:56.4324742Z ❯ Backfilling file list for commit: 40e5eca8498e1ec4685e34b3d03dae8232918152
+release-please	Run Release Please	2026-06-05T04:37:56.6744141Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:56.6745915Z ❯ Backfilling file list for commit: 845ec0a51124eabc38042d29bd5542a7c6acb215
+release-please	Run Release Please	2026-06-05T04:37:56.9572072Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:56.9572614Z ❯ Backfilling file list for commit: c6fd25b1e102bd0e462e35ffb3e5c55fba7b9203
+release-please	Run Release Please	2026-06-05T04:37:57.1730966Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:57.1731867Z ❯ Backfilling file list for commit: 25dae84ec09412326282cb9c721b37b0a409f55f
+release-please	Run Release Please	2026-06-05T04:37:57.4372144Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:57.4373008Z ❯ Backfilling file list for commit: 224bfc1f465c51c3bd1b8486c834c357fcbb85ce
+release-please	Run Release Please	2026-06-05T04:37:57.6577459Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:57.6578653Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 69
+release-please	Run Release Please	2026-06-05T04:37:57.9896054Z ❯ Backfilling file list for commit: 86efb5e32de87897920f539b58b920b9b1a6e022
+release-please	Run Release Please	2026-06-05T04:37:58.2085251Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:58.2086229Z ❯ Backfilling file list for commit: 1670345c009533a6d6135683a5441ec1852cba39
+release-please	Run Release Please	2026-06-05T04:37:58.4523360Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:58.4524677Z ❯ Backfilling file list for commit: d1219ca444478dbdf466cb5c270cbdd6ea0a41ed
+release-please	Run Release Please	2026-06-05T04:37:59.0057382Z ❯ Found 87 files
+release-please	Run Release Please	2026-06-05T04:37:59.0058718Z ❯ Backfilling file list for commit: 33cd0e353bd3eaa8e67671db42d65eb3364d4985
+release-please	Run Release Please	2026-06-05T04:37:59.2426442Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:59.2427364Z ❯ Backfilling file list for commit: 52218673fb3d2a7a534e4eb82ccbf4a6593132c1
+release-please	Run Release Please	2026-06-05T04:37:59.4791125Z ❯ Found 7 files
+release-please	Run Release Please	2026-06-05T04:37:59.4791820Z ❯ Backfilling file list for commit: 1ca89fa11ec01cb97b32cbdedaa0dbdfdd0e1a06
+release-please	Run Release Please	2026-06-05T04:37:59.7267485Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:59.7268470Z ❯ Backfilling file list for commit: f98a9d7c0c62039d25f4dd5cf422ea8a3357a268
+release-please	Run Release Please	2026-06-05T04:37:59.9911278Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:37:59.9911918Z ❯ Backfilling file list for commit: d1c4eac008dd9316aae275c1c294cce50af45173
+release-please	Run Release Please	2026-06-05T04:38:00.2244536Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:00.2245509Z ❯ Backfilling file list for commit: 5d6d281b8ed2c3c7406fcd7f3e5e0172c4577ee2
+release-please	Run Release Please	2026-06-05T04:38:00.4825706Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:00.4826414Z ❯ Backfilling file list for commit: 6b77c8fff67edf01e6786121557f03f5b21cf6dc
+release-please	Run Release Please	2026-06-05T04:38:00.7022206Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:00.7023104Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 79
+release-please	Run Release Please	2026-06-05T04:38:01.0301899Z ❯ Backfilling file list for commit: 8371b3b2b6d53e90573a6bcdf5837060193cce51
+release-please	Run Release Please	2026-06-05T04:38:01.2627175Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:01.2628152Z ❯ Backfilling file list for commit: 5e3d8580b251fe413fc8ab37ba60d4145780746c
+release-please	Run Release Please	2026-06-05T04:38:01.5113077Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:01.5113788Z ❯ Backfilling file list for commit: a0392defdb98f30468714e61c839569a05ce8007
+release-please	Run Release Please	2026-06-05T04:38:01.7374737Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:01.7375570Z ❯ Backfilling file list for commit: c7236e5315132a0f80baa544715d0f0341e804f1
+release-please	Run Release Please	2026-06-05T04:38:01.9648682Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:01.9649275Z ❯ Backfilling file list for commit: 5d1405268a5e380f618ec7733f7e5269b8369633
+release-please	Run Release Please	2026-06-05T04:38:02.1953048Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:02.1953690Z ❯ Backfilling file list for commit: 418cfa2339420ca3a44a1dd352ea993274a046e0
+release-please	Run Release Please	2026-06-05T04:38:02.4267531Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:02.4268664Z ❯ Backfilling file list for commit: cfde31b2fbbcd885d86760c2dec0b773791ff7ff
+release-please	Run Release Please	2026-06-05T04:38:02.6537451Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:02.6538498Z ❯ Backfilling file list for commit: a030b89f4726dbeaa8c5b1b8c696d5271a9dada2
+release-please	Run Release Please	2026-06-05T04:38:02.9248326Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:02.9249163Z ❯ Backfilling file list for commit: 8f92302e20b4255b2158a3b71c978a4713874202
+release-please	Run Release Please	2026-06-05T04:38:03.1460697Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:03.1461727Z ❯ Backfilling file list for commit: b1c9e4adef684fa9c795f1c2c70d9a5074e67c9f
+release-please	Run Release Please	2026-06-05T04:38:03.3748589Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:03.3749584Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 89
+release-please	Run Release Please	2026-06-05T04:38:03.6825583Z ❯ Backfilling file list for commit: 2d0d11d7c3ce10cb99817c5729c9bf7cdb666698
+release-please	Run Release Please	2026-06-05T04:38:03.9247414Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:03.9248459Z ❯ Backfilling file list for commit: 74483947c597f76db7b3e449fcb9f187a8a1c5a6
+release-please	Run Release Please	2026-06-05T04:38:04.1444312Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:04.1444862Z ❯ Backfilling file list for commit: 641b064f772bc0d625962c90f24e613c62f88257
+release-please	Run Release Please	2026-06-05T04:38:04.3655229Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:04.3656298Z ❯ Backfilling file list for commit: 5d968bbb7573c4d2c60081e3ff33d2cd8315319e
+release-please	Run Release Please	2026-06-05T04:38:04.5831993Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:04.5834629Z ❯ Backfilling file list for commit: f5efacbaed0f54867f71601c7e761f0bbeba630a
+release-please	Run Release Please	2026-06-05T04:38:04.8153991Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:04.8154722Z ❯ Backfilling file list for commit: 05010d41a72036c8a380e23a318ee13fd966dd42
+release-please	Run Release Please	2026-06-05T04:38:05.0596915Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:05.0597563Z ❯ Backfilling file list for commit: 55b0d9aad872196a725ca55a03832f2be18e38df
+release-please	Run Release Please	2026-06-05T04:38:05.2973065Z ❯ Found 2 files
+release-please	Run Release Please	2026-06-05T04:38:05.2973841Z ❯ Backfilling file list for commit: 1479b80f1269a3c4ea9d18a20b1dac5f0b8ed594
+release-please	Run Release Please	2026-06-05T04:38:05.5186011Z ❯ Found 5 files
+release-please	Run Release Please	2026-06-05T04:38:05.5186801Z ❯ Backfilling file list for commit: 85fc916e6e00a6b074539f9470d7168146fe304c
+release-please	Run Release Please	2026-06-05T04:38:05.7436554Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:05.7437339Z ❯ Backfilling file list for commit: 4b2b5a787be4e34b655fa6f8bf1045384a892630
+release-please	Run Release Please	2026-06-05T04:38:05.9700981Z ❯ Found 1 files
+release-please	Run Release Please	2026-06-05T04:38:05.9701910Z ❯ Fetching merge commits on branch main with cursor: e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d 99
+release-please	Run Release Please	2026-06-05T04:38:06.2323130Z ❯ Backfilling file list for commit: 03089c63991ec9e29a508685d463953e9dc94169
+release-please	Run Release Please	2026-06-05T04:38:06.5695611Z ❯ Found 3 files
+release-please	Run Release Please	2026-06-05T04:38:06.5696457Z ❯ Backfilling file list for commit: 141a96ec931ef20436341b503e35808bc7e4dd9c
+release-please	Run Release Please	2026-06-05T04:38:06.7899624Z ❯ Found 0 files
+release-please	Run Release Please	2026-06-05T04:38:06.7900226Z ✔ Splitting 102 commits by path
+release-please	Run Release Please	2026-06-05T04:38:06.7908611Z ✔ Building candidate release pull request for path: .
+release-please	Run Release Please	2026-06-05T04:38:06.7909344Z ❯ type: go
+release-please	Run Release Please	2026-06-05T04:38:06.7909596Z ❯ targetBranch: main
+release-please	Run Release Please	2026-06-05T04:38:06.7932118Z ❯ commit could not be parsed: 7a158fd8154936f62a855120ec6105f6e13122f6 Revert "chore: update release-please manifest version to 0.0.0"
+release-please	Run Release Please	2026-06-05T04:38:06.7933125Z ❯ error message: Error: unexpected token ' ' at 1:7, valid tokens [(, !, :]
+release-please	Run Release Please	2026-06-05T04:38:06.8065289Z ❯ commit could not be parsed: 141a96ec931ef20436341b503e35808bc7e4dd9c Initial commit
+release-please	Run Release Please	2026-06-05T04:38:06.8066293Z ❯ error message: Error: unexpected token ' ' at 1:8, valid tokens [(, !, :]
+release-please	Run Release Please	2026-06-05T04:38:06.8066980Z ❯ commits: 101
+release-please	Run Release Please	2026-06-05T04:38:06.8067688Z ✔ Considering: 101 commits
+release-please	Run Release Please	2026-06-05T04:38:06.8068729Z ⚠ No latest release pull request found.
+release-please	Run Release Please	2026-06-05T04:38:06.8070577Z ❯ component: 
+release-please	Run Release Please	2026-06-05T04:38:06.8072631Z ❯ pull request title pattern: undefined
+release-please	Run Release Please	2026-06-05T04:38:06.8073196Z ❯ componentNoSpace: undefined
+release-please	Run Release Please	2026-06-05T04:38:06.8079241Z ⚠ Setting version for . from release-as configuration
+release-please	Run Release Please	2026-06-05T04:38:07.0408473Z ✔ Looking for open release pull requests
+release-please	Run Release Please	2026-06-05T04:38:07.2843082Z ✔ found 1 open release pull requests.
+release-please	Run Release Please	2026-06-05T04:38:07.2843796Z ✔ Looking for snoozed release pull requests
+release-please	Run Release Please	2026-06-05T04:38:07.4737287Z ✔ found 0 snoozed release pull requests.
+release-please	Run Release Please	2026-06-05T04:38:07.4741792Z ❯ Fetching CHANGELOG.md from branch main
+release-please	Run Release Please	2026-06-05T04:38:07.6171304Z ❯ Fetching internal/config/version.go from branch main
+release-please	Run Release Please	2026-06-05T04:38:07.7561033Z ❯ Fetching VERSION from branch main
+release-please	Run Release Please	2026-06-05T04:38:07.9233252Z ❯ Fetching .release-please-manifest.json from branch main
+release-please	Run Release Please	2026-06-05T04:38:07.9241202Z ✔ Starting GitHub PR workflow...
+release-please	Run Release Please	2026-06-05T04:38:08.1471830Z ✔ Successfully found branch HEAD sha "e71ed307a37d7085b5ef2a6dfbf3044b78ad5b4d".
+release-please	Run Release Please	2026-06-05T04:38:08.3574684Z ✔ Skipping branch creation step...
+release-please	Run Release Please	2026-06-05T04:38:08.5740254Z ✔ Got the latest commit tree
+release-please	Run Release Please	2026-06-05T04:38:08.8852556Z ✔ Successfully created a tree with the desired changes with SHA a7e197b8d98d89b2929f0f2a8cdf1398abcbaa6b
+release-please	Run Release Please	2026-06-05T04:38:09.2329619Z ✔ Successfully created commit. See commit at https://api.github.com/repos/npmanos/discourse-labeler/git/commits/fd405cad63a55052b0530aa5d5d780c790da39e4
+release-please	Run Release Please	2026-06-05T04:38:09.2331559Z ✔ Updating reference heads/release-please--branches--main to fd405cad63a55052b0530aa5d5d780c790da39e4
+release-please	Run Release Please	2026-06-05T04:38:09.8621322Z ✔ Successfully updated reference release-please--branches--main to fd405cad63a55052b0530aa5d5d780c790da39e4
+release-please	Run Release Please	2026-06-05T04:38:10.1210299Z ✔ Found existing pull request for reference npmanos:release-please--branches--main. Skipping creating a new pull request.
+release-please	Run Release Please	2026-06-05T04:38:10.1211935Z ✔ Successfully opened pull request: 7.
+release-please	Complete job	﻿2026-06-05T04:38:10.7563024Z Evaluate and set job outputs
+release-please	Complete job	2026-06-05T04:38:10.7571931Z Cleaning up orphan processes
+release-please	Complete job	2026-06-05T04:38:10.7833078Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: googleapis/release-please-action@v4. Actions will be forced to run with Node.js 24 by default starting June 16th, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
